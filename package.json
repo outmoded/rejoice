@@ -1,0 +1,30 @@
+{
+  "name": "rejoice",
+  "description": "hapi.js CLI",
+  "version": "1.0.0",
+  "repository": "git://github.com/hapijs/rejoice",
+  "main": "index",
+  "keywords": [
+    "hapi",
+    "cli",
+    "utility",
+    "command"
+  ],
+  "engines": {
+    "node": ">=0.10.32"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "lab": "4.x.x"
+  },
+  "scripts": {
+    "test": "make test-cov"
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "http://github.com/hapijs/rejoice/raw/master/LICENSE"
+    }
+  ]
+}
