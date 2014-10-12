@@ -1,0 +1,4 @@
+rejoice
+=======
+
+hapi.js CLI
