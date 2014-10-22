@@ -4,6 +4,7 @@ var ChildProcess = require('child_process');
 var Fs = require('fs');
 var Os = require('os');
 var Path = require('path');
+var Code = require('code');
 var Hoek = require('hoek');
 var Lab = require('lab');
 var Rejoice = require('..');
@@ -19,10 +20,14 @@ var internals = {};
 var lab = exports.lab = Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var expect = Lab.expect;
+var expect = Code.expect;
 
 
-describe('Hapi command line', function () {
+describe('start()', function () {
+
+});
+
+describe('bin/rejoice', function () {
 
     it('composes pack with absolute path', function (done) {
 
@@ -74,7 +79,7 @@ describe('Hapi command line', function () {
 
         hapi.stderr.on('data', function (data) {
 
-            expect(data.toString()).to.not.exist;
+            expect(data.toString()).to.not.exist();
         });
     });
 
@@ -132,7 +137,7 @@ describe('Hapi command line', function () {
 
         hapi.stderr.on('data', function (data) {
 
-            expect(data.toString()).to.not.exist;
+            expect(data.toString()).to.not.exist();
         });
     });
 
@@ -176,12 +181,12 @@ describe('Hapi command line', function () {
 
         hapi.stdout.on('data', function (data) {
 
-            expect(data.toString()).to.not.exist;
+            expect(data.toString()).to.not.exist();
         });
 
         hapi.stderr.on('data', function (data) {
 
-            expect(data.toString()).to.contain('ENOENT');
+            expect(data.toString()).to.include('ENOENT');
 
             hapi.kill();
 
@@ -233,12 +238,12 @@ describe('Hapi command line', function () {
 
         hapi.stdout.on('data', function (data) {
 
-            expect(data.toString()).to.not.exist;
+            expect(data.toString()).to.not.exist();
         });
 
         hapi.stderr.on('data', function (data) {
 
-            expect(data.toString()).to.contain('Cannot find module');
+            expect(data.toString()).to.include('Cannot find module');
 
             hapi.kill();
 
@@ -289,12 +294,12 @@ describe('Hapi command line', function () {
 
         hapi.stdout.on('data', function (data) {
 
-            expect(data.toString()).to.not.exist;
+            expect(data.toString()).to.not.exist();
         });
 
         hapi.stderr.on('data', function (data) {
 
-            expect(data.toString()).to.contain('Cannot find module');
+            expect(data.toString()).to.include('Cannot find module');
 
             hapi.kill();
 
@@ -360,7 +365,7 @@ describe('Hapi command line', function () {
 
         hapi.stderr.on('data', function (data) {
 
-            expect(data.toString()).to.not.exist;
+            expect(data.toString()).to.not.exist();
         });
     });
 
@@ -446,7 +451,7 @@ describe('Hapi command line', function () {
         hapi.stderr.setEncoding('utf8');
         hapi.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
     });
 });
