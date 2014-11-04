@@ -29,10 +29,10 @@ describe('start()', function () {
 
 describe('bin/rejoice', function () {
 
-    it('composes pack with absolute path', function (done) {
+    it('composes server with absolute path', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -40,7 +40,7 @@ describe('bin/rejoice', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -80,10 +80,10 @@ describe('bin/rejoice', function () {
         });
     });
 
-    it('composes pack with absolute path using symlink', { skip: process.platform === 'win32' }, function (done) {
+    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -91,7 +91,7 @@ describe('bin/rejoice', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -137,7 +137,7 @@ describe('bin/rejoice', function () {
     it('fails when path cannot be resolved', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -145,7 +145,7 @@ describe('bin/rejoice', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -188,7 +188,7 @@ describe('bin/rejoice', function () {
     it('errors when it cannot require the extra module', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -196,7 +196,7 @@ describe('bin/rejoice', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -240,7 +240,7 @@ describe('bin/rejoice', function () {
     it('errors when it cannot require the extra module from absolute path', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -248,7 +248,7 @@ describe('bin/rejoice', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -293,7 +293,7 @@ describe('bin/rejoice', function () {
     it('loads extra modules as intended', function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -301,7 +301,7 @@ describe('bin/rejoice', function () {
                     my: 'special-value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: 0,
                     labels: ['api', 'nasty', 'test']
@@ -349,7 +349,7 @@ describe('bin/rejoice', function () {
     it('parses $prefixed values as environment variable values', { parallel: false }, function (done) {
 
         var manifest = {
-            pack: {
+            server: {
                 cache: {
                     engine: 'catbox-memory'
                 },
@@ -357,7 +357,7 @@ describe('bin/rejoice', function () {
                     my: '$env.special_value'
                 }
             },
-            servers: [
+            connections: [
                 {
                     port: '$env.undefined',
                     labels: ['api', 'nasty', 'test']
