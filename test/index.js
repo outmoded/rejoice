@@ -43,16 +43,13 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
+
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -79,8 +76,7 @@ describe('bin/rejoice', function () {
 
         hapi.stderr.on('data', function (data) {
 
-            console.log(data.toString())
-            //expect(data.toString()).to.not.exist();
+            expect(data.toString()).to.not.exist();
         });
     });
 
@@ -98,16 +94,12 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -156,16 +148,12 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -211,16 +199,12 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -267,16 +251,12 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -324,16 +304,12 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: 0,
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: 'localhost',
                     port: 0,
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
@@ -384,16 +360,12 @@ describe('bin/rejoice', function () {
             servers: [
                 {
                     port: '$env.undefined',
-                    options: {
-                        labels: ['api', 'nasty', 'test']
-                    }
+                    labels: ['api', 'nasty', 'test']
                 },
                 {
                     host: '$env.host',
                     port: '$env.port',
-                    options: {
-                        labels: ['api', 'nice']
-                    }
+                    labels: ['api', 'nice']
                 }
             ],
             plugins: {
