@@ -19,6 +19,7 @@
     "hoek": "2.x.x"
   },
   "devDependencies": {
+    "catbox-memory": "1.x.x",
     "code": "1.x.x",
     "lab": "5.x.x"
   },
