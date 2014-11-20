@@ -23,10 +23,6 @@ var it = lab.it;
 var expect = Code.expect;
 
 
-describe('start()', function () {
-
-});
-
 describe('bin/rejoice', function () {
 
     it('composes server with absolute path', function (done) {
@@ -76,8 +72,7 @@ describe('bin/rejoice', function () {
 
         hapi.stderr.on('data', function (data) {
 
-            console.log(data.toString())
-            //expect(data.toString()).to.not.exist();
+            expect(data.toString()).to.not.exist();
         });
     });
 
