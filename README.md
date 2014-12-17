@@ -55,18 +55,20 @@ where app.json may look something like:
             "logRequestHeaders": true,
             "reporters": [{
                 "reporter": "good-console",
-                "args": [{ "request": "*", "ops": "*", "log": "*", "error": "*" }]
+                "args": [{ "response": "*", "ops": "*", "log": "*", "error": "*" }]
             },
             {
                 "reporter": "good-file",
                 "args": [
-                    "/log/", { "request": "*", "error": "*" }, { "fileName": "request.log" }
+                    "/log/response.log",
+                    { "response": "*", "error": "*" }
                 ]
             },
             {
                 "reporter": "good-file",
                 "args": [
-                    "/log/", { "ops": "*" }, { "fileName": "ops.log" }
+                    "/log/ops.log",
+                    { "ops": "*" }
                 ]
             }]
         },
