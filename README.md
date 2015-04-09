@@ -59,12 +59,12 @@ where app.json may look something like:
             },
             {
                 "reporter": "good-file",
-                "events": { "response": "*", "error": "*" }
+                "events": { "response": "*", "error": "*" },
                 "config": "/log/response.log"
             },
             {
                 "reporter": "good-file",
-                "events": { "ops": "*" }
+                "events": { "ops": "*" },
                 "config": "/log/ops.log"
             }]
         },
