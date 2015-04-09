@@ -52,24 +52,20 @@ where app.json may look something like:
     "plugins": {
         "good": {
             "opsInterval": 5000,
-            "logRequestHeaders": true,
+            "requestHeaders": true,
             "reporters": [{
                 "reporter": "good-console",
-                "args": [{ "response": "*", "ops": "*", "log": "*", "error": "*" }]
+                "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
             },
             {
                 "reporter": "good-file",
-                "args": [
-                    "/log/response.log",
-                    { "response": "*", "error": "*" }
-                ]
+                "events": { "response": "*", "error": "*" }
+                "config": "/log/response.log"
             },
             {
                 "reporter": "good-file",
-                "args": [
-                    "/log/ops.log",
-                    { "ops": "*" }
-                ]
+                "events": { "ops": "*" }
+                "config": "/log/ops.log"
             }]
         },
         "lout": {}
