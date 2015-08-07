@@ -12,7 +12,6 @@ To start it up simply:
 
 ```javascript
 rejoice -c app.json
-
 ```
 
 where app.json may look something like:
@@ -71,5 +70,44 @@ where app.json may look something like:
         "lout": {}
     }
 }
+```
 
+You can specify a specific node_modules top level path by using the `-p` flag.
+
+```javascript
+rejoice -c app.json -p /full/path/node_modules
+```
+
+This will allow you for your plugins to use relative paths in the config file as well.  See the example below.
+
+```javascript
+{
+    "connections": [
+        {
+            "port": 8080,
+            "labels": [
+                "api",
+                "http"
+            ]
+        }
+    },
+    "plugins": {
+        "good": {
+            "opsInterval": 5000,
+            "requestHeaders": true,
+            "reporters": [{
+                "reporter": "good-console",
+                "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
+            },
+        },
+        "lout": {},
+        "./myplugin": {}
+    }
+}
+```
+
+If you need a module required before your application is loaded you can use the `-r` flag.
+
+```javascript
+rejoice -c app.json -r `module`
 ```
