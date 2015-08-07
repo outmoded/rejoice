@@ -75,13 +75,10 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (cb) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
-
-                    cb();
-
                     done();
                 };
                 callback(err, server);
@@ -118,13 +115,11 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (cb) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(extraPath);
                     Fs.unlinkSync(configPath);
-
-                    cb();
                     done();
                 };
                 callback(err, server);
@@ -169,14 +164,11 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (cb) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     console.error = consoleError;
-
                     Fs.unlinkSync(configPath);
-
-                    cb();
                     done();
                 };
                 callback(err, server);
@@ -221,14 +213,11 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (cb) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     console.error = consoleError;
-
                     Fs.unlinkSync(configPath);
-
-                    cb();
                     done();
                 };
                 callback(err, server);
@@ -302,12 +291,10 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (cb) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
-
-                    cb();
                     done();
                 };
                 callback(err, server);
@@ -459,7 +446,7 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (cb) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
@@ -470,8 +457,6 @@ describe('start()', function () {
                         restore();
                         restore = changes.pop();
                     }
-
-                    cb();
                     done();
                 };
                 callback(err, server);
