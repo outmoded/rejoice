@@ -3,7 +3,7 @@
   "description": "hapi.js CLI",
   "version": "2.0.0",
   "repository": "git://github.com/hapijs/rejoice",
-  "main": "index",
+  "main": "lib/index.js",
   "keywords": [
     "hapi",
     "cli",
@@ -14,7 +14,7 @@
     "node": ">=0.10.32"
   },
   "dependencies": {
-    "bossy": "1.x.x",
+    "bossy": "2.x.x",
     "glue": "2.x.x",
     "hoek": "2.x.x"
   },
@@ -27,7 +27,8 @@
     "rejoice": "./bin/rejoice"
   },
   "scripts": {
-    "test": "make test-cov"
+    "test": "lab -t 100 -a code -L",
+    "test-cov-html": "lab -t 100 -a code -L -r html -o coverage.html"
   },
   "licenses": [
     {

@@ -35,7 +35,7 @@ describe('start()', function () {
         done();
     });
 
-    var manifest = {
+    var manifestFile = {
         server: {
             cache: {
                 engine: 'catbox-memory'
@@ -60,7 +60,7 @@ describe('start()', function () {
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
         var compose = Glue.compose;
 
@@ -75,13 +75,10 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
-
-                    callback();
-
                     done();
                 };
                 callback(err, server);
@@ -89,7 +86,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath]
+            args: ['-c', configPath, '-p', modulePath]
         });
     });
 
@@ -100,7 +97,7 @@ describe('start()', function () {
         var extraPath = Hoek.uniqueFilename(Os.tmpDir());
         var extra = 'console.log(\'test passed\')';
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
         Fs.writeFileSync(extraPath, extra);
 
         var compose = Glue.compose;
@@ -118,13 +115,11 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(extraPath);
                     Fs.unlinkSync(configPath);
-
-                    callback();
                     done();
                 };
                 callback(err, server);
@@ -132,7 +127,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '--require', extraPath]
+            args: ['-c', configPath, '--require', extraPath]
         });
     });
 
@@ -141,7 +136,7 @@ describe('start()', function () {
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
         var compose = Glue.compose;
         var realpathSync = Fs.realpathSync;
@@ -169,14 +164,11 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     console.error = consoleError;
-
                     Fs.unlinkSync(configPath);
-
-                    callback();
                     done();
                 };
                 callback(err, server);
@@ -184,7 +176,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath, '--require', 'hoek']
+            args: ['-c', configPath, '-p', modulePath, '--require', 'hoek']
         });
     });
 
@@ -193,7 +185,7 @@ describe('start()', function () {
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
         var compose = Glue.compose;
         var realpathSync = Fs.realpathSync;
@@ -221,14 +213,11 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     console.error = consoleError;
-
                     Fs.unlinkSync(configPath);
-
-                    callback();
                     done();
                 };
                 callback(err, server);
@@ -236,7 +225,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath, '--require', './node_modules/hoek']
+            args: ['-c', configPath, '-p', modulePath, '--require', './node_modules/hoek']
         });
     });
 
@@ -244,7 +233,7 @@ describe('start()', function () {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
         var exit = process.exit;
         var consoleError = console.error;
@@ -268,14 +257,14 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '--require', '/foo/bar']
+            args: ['-c', configPath, '--require', '/foo/bar']
         });
     });
 
     it('loads a manifest with a relative path', function (done) {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
-        var m = Hoek.clone(manifest);
+        var m = Hoek.clone(manifestFile);
 
         m.plugins = {};
 
@@ -302,12 +291,10 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
-
-                    callback();
                     done();
                 };
                 callback(err, server);
@@ -315,7 +302,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', './' + configPath]
+            args: ['-c', './' + configPath]
         });
     });
 
@@ -323,7 +310,7 @@ describe('start()', function () {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest) + ']]');
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile) + ']]');
 
         var exit = process.exit;
         var consoleError = console.error;
@@ -346,7 +333,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath]
+            args: ['-c', configPath]
         });
     });
 
@@ -355,7 +342,7 @@ describe('start()', function () {
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
 
-        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
         var realpath = Fs.realpath;
         var consoleError = console.error;
@@ -385,13 +372,13 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath]
+            args: ['-c', configPath, '-p', modulePath]
         });
     });
 
-    it('parses $prefixed values as environment variable values', {parallel: false}, function (done) {
+    it('parses $prefixed values as environment variable values', { parallel: false }, function (done) {
 
-        var m = Hoek.clone(manifest);
+        var m = Hoek.clone(manifestFile);
 
         m.server.app.my = '$env.special_value';
         m.connections = [
@@ -459,7 +446,7 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function () {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
@@ -470,8 +457,6 @@ describe('start()', function () {
                         restore();
                         restore = changes.pop();
                     }
-
-                    callback();
                     done();
                 };
                 callback(err, server);
@@ -479,7 +464,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath]
+            args: ['-c', configPath, '-p', modulePath]
         });
     });
 
@@ -526,7 +511,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-h', '-c', 'foo.json']
+            args: ['-h', '-c', 'foo.json']
         });
     });
 
@@ -534,7 +519,7 @@ describe('start()', function () {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
-        var m = Hoek.clone(manifest);
+        var m = Hoek.clone(manifestFile);
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
@@ -563,7 +548,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath]
+            args: ['-c', configPath, '-p', modulePath]
         });
     });
 
@@ -571,7 +556,7 @@ describe('start()', function () {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
-        var m = Hoek.clone(manifest);
+        var m = Hoek.clone(manifestFile);
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
@@ -587,14 +572,14 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.start = function (callback) {
+                server.start = function (cb) {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
 
                     expect(function () {
 
-                        callback(new Error('mock error'));
+                        cb(new Error('mock error'));
                     }).to.throw(Error, /mock error/);
 
                     done();
@@ -605,7 +590,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath]
+            args: ['-c', configPath, '-p', modulePath]
         });
     });
 
@@ -613,7 +598,7 @@ describe('start()', function () {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
         var modulePath = Path.join(__dirname, 'plugins');
-        var m = Hoek.clone(manifest);
+        var m = Hoek.clone(manifestFile);
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
@@ -635,17 +620,17 @@ describe('start()', function () {
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                server.stop = function (callback) {
+                server.stop = function (cbStop) {
 
-                    return callback();
+                    return cbStop();
                 };
 
-                server.start = function (callback) {
+                server.start = function (cbStart) {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
 
-                    callback();
+                    cbStart();
 
                     process.exit = function (value) {
 
@@ -658,7 +643,7 @@ describe('start()', function () {
                         Rejoice.start = start;
 
                         expect(options).to.deep.equal({
-                            args: [null, null, '-c', configPath, '-p', modulePath]
+                            args: ['-c', configPath, '-p', modulePath]
                         });
 
                         done();
@@ -673,7 +658,7 @@ describe('start()', function () {
         };
 
         Rejoice.start({
-            args: [null, null, '-c', configPath, '-p', modulePath]
+            args: ['-c', configPath, '-p', modulePath]
         });
     });
 });
