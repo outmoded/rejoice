@@ -78,7 +78,7 @@ You can specify a specific node_modules top level path by using the `-p` flag.
 rejoice -c app.json -p /full/path/node_modules
 ```
 
-This will allow you for your plugins to use relative paths in the config file as well.  See the example below.
+This will allow your plugins to use relative paths in the config file as well.  See the example below.
 
 ```javascript
 {
