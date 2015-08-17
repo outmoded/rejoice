@@ -98,7 +98,7 @@ This will allow your plugins to use relative paths in the config file as well.  
             "reporters": [{
                 "reporter": "good-console",
                 "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
-            ],
+            }],
         },
         "lout": {},
         "./myplugin": {}
