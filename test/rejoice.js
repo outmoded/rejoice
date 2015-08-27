@@ -90,6 +90,42 @@ describe('start()', function () {
         });
     });
 
+    it('composes server with js absolute path', function (done) {
+
+        var configPath = Hoek.uniqueFilename(Os.tmpDir()) + '.js';
+        var modulePath = Path.join(__dirname, 'plugins');
+
+        var jsManifest = 'module.exports = ' + JSON.stringify(manifestFile) + ';';
+        Fs.writeFileSync(configPath, jsManifest);
+
+        var compose = Glue.compose;
+
+        Glue.compose = function (manifest, packOptions, callback) {
+
+            expect(manifest.plugins['./--loaded']).to.exist();
+            expect(manifest.server).to.exist();
+            expect(packOptions.relativeTo).to.be.a.string();
+
+            compose(manifest, packOptions, function (err, server) {
+
+                expect(err).to.not.exist();
+                expect(server).to.exist();
+
+                server.start = function () {
+
+                    Glue.compose = compose;
+                    Fs.unlinkSync(configPath);
+                    done();
+                };
+                callback(err, server);
+            });
+        };
+
+        Rejoice.start({
+            args: ['-c', configPath, '-p', modulePath]
+        });
+    });
+
     it('composes server with an extra module', function (done) {
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir());
@@ -247,10 +283,8 @@ describe('start()', function () {
         process.exit = function (value) {
 
             expect(value).to.equal(1);
-
             process.exit = exit;
             console.error = consoleError;
-
             Fs.unlinkSync(configPath);
 
             done();
