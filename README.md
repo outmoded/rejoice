@@ -90,7 +90,7 @@ This will allow your plugins to use relative paths in the config file as well.  
                 "http"
             ]
         }
-    },
+    ],
     "plugins": {
         "good": {
             "opsInterval": 5000,
@@ -98,7 +98,7 @@ This will allow your plugins to use relative paths in the config file as well.  
             "reporters": [{
                 "reporter": "good-console",
                 "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
-            },
+            }],
         },
         "lout": {},
         "./myplugin": {}
