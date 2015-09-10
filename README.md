@@ -6,12 +6,16 @@ hapi.js CLI.
 
 Lead Maintainer - [Lloyd Benson](https://github.com/lloydbenson)
 
-Rejoice is a CLI tool for hapi which requires a json file with the config.  It relies on the composer library called glue (http://github.com/hapijs/glue).
+Rejoice is a CLI tool for hapi which requires a js/json file with the config.  It relies on the composer library called glue (http://github.com/hapijs/glue).
 
 To start it up simply:
 
 ```javascript
 rejoice -c app.json
+
+// or using regular JS file
+// where app.js must export the config object
+rejoice -c app.js
 ```
 
 where app.json may look something like:
