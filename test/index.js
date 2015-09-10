@@ -53,14 +53,13 @@ describe('bin/rejoice', function () {
             }
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
         var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
-
         hapi.stdout.on('data', function (data) {
 
             expect(data.toString()).to.equal('loaded\n');
@@ -103,10 +102,10 @@ describe('bin/rejoice', function () {
             }
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
-        var symlinkPath = Hoek.uniqueFilename(Os.tmpDir());
+        var symlinkPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
 
         Fs.symlinkSync(modulePath, symlinkPath, 'dir');
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
@@ -157,7 +156,7 @@ describe('bin/rejoice', function () {
             }
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
@@ -208,7 +207,7 @@ describe('bin/rejoice', function () {
             }
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         var extraPath = 'somecoolmodule';
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
@@ -260,8 +259,8 @@ describe('bin/rejoice', function () {
             }
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
-        var extraPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
 
@@ -315,8 +314,8 @@ describe('bin/rejoice', function () {
 
         var extra = 'console.log(\'test passed\')';
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
-        var extraPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
 
@@ -393,7 +392,7 @@ describe('bin/rejoice', function () {
         // Ensure that the 'undefined' environment variable is *not* set.
         changes.push(setEnv('undefined'));
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir());
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
 
