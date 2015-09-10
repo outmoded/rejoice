@@ -246,9 +246,9 @@ describe('start()', function () {
 
         process.exit = function (value) {
 
+            process.exit = exit;
             expect(value).to.equal(1);
 
-            process.exit = exit;
             console.error = consoleError;
 
             Fs.unlinkSync(configPath);
@@ -315,9 +315,9 @@ describe('start()', function () {
 
         process.exit = function (value) {
 
+            process.exit = exit;
             expect(value).to.equal(1);
 
-            process.exit = exit;
             console.error = consoleError;
 
             Fs.unlinkSync(configPath);
@@ -473,9 +473,9 @@ describe('start()', function () {
 
         process.exit = function (code) {
 
+            process.exit = exit;
             expect(code).to.equal(1);
 
-            process.exit = exit;
             console.error = consoleError;
             done();
         };
@@ -496,9 +496,9 @@ describe('start()', function () {
 
         process.exit = function (code) {
 
+            process.exit = exit;
             expect(code).to.equal(1);
 
-            process.exit = exit;
             console.log = Hoek.ignore;
             done();
         };
