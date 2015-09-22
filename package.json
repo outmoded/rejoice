@@ -30,10 +30,5 @@
     "test": "lab -t 100 -a code -L",
     "test-cov-html": "lab -t 100 -a code -L -r html -o coverage.html"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "http://github.com/hapijs/rejoice/raw/master/LICENSE"
-    }
-  ]
+  "license": "BSD-3-Clause"
 }
