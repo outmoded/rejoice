@@ -76,13 +76,13 @@ where app.json may look something like:
 }
 ```
 
-You can specify a specific node_modules top level path by using the `-p` flag.
+You can specify a specific path to be passed to Glue as the `relativeTo` option by using the `-p` flag.
 
 ```javascript
-rejoice -c app.json -p /full/path/node_modules
+rejoice -c app.json -p /full/path/to/project/plugin/dir
 ```
 
-This will allow your plugins to use relative paths in the config file as well.  See the example below.
+This will allow your plugins to use relative paths in the config file.  See the example below.
 
 ```javascript
 {
@@ -114,4 +114,18 @@ If you need a module required before your application is loaded you can use the 
 
 ```javascript
 rejoice -c app.json -r `module`
+```
+
+When using `-r` with the `-p` flag.  The `-p` flag takes on an additonal meaning.  In this case the `-p` specifies the path where the module specified in `-r` will be found.
+
+```javascript
+rejoice -c app.json -r `module` -p /base/path/to/required/module
+```
+
+The resulting search path for `module` would be `/base/path/to/required/module/node_modules`.
+
+To specify both a `-p` option to be passed to Glue and specify a path to locate the `-r` module use an absolute path for `-r`.
+
+```javascript
+rejoice -c app.json -p ./lib -r /absolute/path/to/module
 ```
