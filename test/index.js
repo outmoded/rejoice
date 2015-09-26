@@ -232,6 +232,7 @@ describe('bin/rejoice', function () {
             done();
         });
     });
+
     it('errors when it cannot require the extra module from absolute path', function (done) {
 
         var manifest = {
@@ -331,6 +332,66 @@ describe('bin/rejoice', function () {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(extraPath);
+
+            done();
+        });
+
+        hapi.stderr.on('data', function (data) {
+
+            expect(data.toString()).to.not.exist();
+        });
+    });
+
+    it('loads multiple extra modules as intended', function (done) {
+
+        var manifest = {
+            server: {
+                cache: {
+                    engine: 'catbox-memory'
+                },
+                app: {
+                    my: 'special-value'
+                }
+            },
+            connections: [
+                {
+                    port: 0,
+                    labels: ['api', 'nasty', 'test']
+                },
+                {
+                    host: 'localhost',
+                    port: 0,
+                    labels: ['api', 'nice']
+                }
+            ],
+            plugins: {
+                './--loaded': {}
+            }
+        };
+
+        var extra1 = 'console.log(\'test 1 passed\')';
+        var extra2 = 'console.log(\'test 2 passed\')';
+
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        var extraPath1 = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        var extraPath2 = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        var modulePath = Path.join(__dirname, 'plugins');
+
+        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+        Fs.writeFileSync(extraPath1, extra1);
+        Fs.writeFileSync(extraPath2, extra2);
+
+        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath1, '--require', extraPath2]);
+
+        hapi.stdout.on('data', function (data) {
+
+            expect(data.toString()).to.equal('test 1 passed\n');
+            hapi.kill();
+
+            Fs.unlinkSync(configPath);
+            Fs.unlinkSync(extraPath1);
+            Fs.unlinkSync(extraPath2);
 
             done();
         });
