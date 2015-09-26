@@ -369,31 +369,44 @@ describe('bin/rejoice', function () {
             }
         };
 
-        var extra1 = 'console.log(\'test 1 passed\')';
-        var extra2 = 'console.log(\'test 2 passed\')';
-
         var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var extraPath1 = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        var extraPath2 = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
-        Fs.writeFileSync(extraPath1, extra1);
-        Fs.writeFileSync(extraPath2, extra2);
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath1, '--require', extraPath2]);
+        var args = [rejoice, '-c', configPath, '-p', modulePath];
+
+        var EXTRAS_TO_CREATE = 2;
+        var extraPaths = [];
+        for (var i = 0; i < EXTRAS_TO_CREATE; i++) {
+            var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+
+            Fs.writeFileSync(extraPath, 'console.log(\'test ' + i + ' passed\')');
+
+            args.push('--require');
+            args.push(extraPath);
+            extraPaths.push(extraPath);
+        }
+
+        var hapi = ChildProcess.spawn('node', args);
+        var dataCount = 0;
 
         hapi.stdout.on('data', function (data) {
 
-            expect(data.toString()).to.equal('test 1 passed\n');
-            hapi.kill();
+            expect(data.toString()).to.equal('test ' + dataCount + ' passed\n');
 
-            Fs.unlinkSync(configPath);
-            Fs.unlinkSync(extraPath1);
-            Fs.unlinkSync(extraPath2);
+            if (++dataCount === EXTRAS_TO_CREATE) {
+                hapi.kill();
 
-            done();
+                Fs.unlinkSync(configPath);
+
+                for (var j = 0; j < EXTRAS_TO_CREATE; j++) {
+                    Fs.unlinkSync(extraPaths[j]);
+                }
+
+                done();
+            }
         });
 
         hapi.stderr.on('data', function (data) {
