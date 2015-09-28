@@ -232,6 +232,7 @@ describe('bin/rejoice', function () {
             done();
         });
     });
+
     it('errors when it cannot require the extra module from absolute path', function (done) {
 
         var manifest = {
@@ -333,6 +334,79 @@ describe('bin/rejoice', function () {
             Fs.unlinkSync(extraPath);
 
             done();
+        });
+
+        hapi.stderr.on('data', function (data) {
+
+            expect(data.toString()).to.not.exist();
+        });
+    });
+
+    it('loads multiple extra modules as intended', function (done) {
+
+        var manifest = {
+            server: {
+                cache: {
+                    engine: 'catbox-memory'
+                },
+                app: {
+                    my: 'special-value'
+                }
+            },
+            connections: [
+                {
+                    port: 0,
+                    labels: ['api', 'nasty', 'test']
+                },
+                {
+                    host: 'localhost',
+                    port: 0,
+                    labels: ['api', 'nice']
+                }
+            ],
+            plugins: {
+                './--loaded': {}
+            }
+        };
+
+        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        var modulePath = Path.join(__dirname, 'plugins');
+
+        Fs.writeFileSync(configPath, JSON.stringify(manifest));
+
+        var args = [rejoice, '-c', configPath, '-p', modulePath];
+
+        var EXTRAS_TO_CREATE = 2;
+        var extraPaths = [];
+        for (var i = 0; i < EXTRAS_TO_CREATE; i++) {
+            var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+
+            Fs.writeFileSync(extraPath, 'console.log(\'test ' + i + ' passed\')');
+
+            args.push('--require');
+            args.push(extraPath);
+            extraPaths.push(extraPath);
+        }
+
+        var hapi = ChildProcess.spawn('node', args);
+        var dataCount = 0;
+
+        hapi.stdout.on('data', function (data) {
+
+            expect(data.toString()).to.equal('test ' + dataCount + ' passed\n');
+
+            if (++dataCount === EXTRAS_TO_CREATE) {
+                hapi.kill();
+
+                Fs.unlinkSync(configPath);
+
+                for (var j = 0; j < EXTRAS_TO_CREATE; j++) {
+                    Fs.unlinkSync(extraPaths[j]);
+                }
+
+                done();
+            }
         });
 
         hapi.stderr.on('data', function (data) {

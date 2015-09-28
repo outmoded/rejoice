@@ -116,7 +116,13 @@ If you need a module required before your application is loaded you can use the 
 rejoice -c app.json -r `module`
 ```
 
-When using `-r` with the `-p` flag.  The `-p` flag takes on an additonal meaning.  In this case the `-p` specifies the path where the module specified in `-r` will be found.
+Multiple modules can be required by using the `-r` flag as many times as needed. This example requires two modules from an implied source of `node_modules`.
+
+```
+rejoice -c app.json -r babel/register -r dotenv/config
+```
+
+When using `-r` with the `-p` flag, the `-p` flag takes on an additional meaning.  In this case, the `-p` specifies the path where the module specified in `-r` will be found.
 
 ```javascript
 rejoice -c app.json -r `module` -p /base/path/to/required/module
