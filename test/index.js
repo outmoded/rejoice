@@ -7,7 +7,6 @@ var Path = require('path');
 var Code = require('code');
 var Hoek = require('hoek');
 var Lab = require('lab');
-var Rejoice = require('..');
 
 
 // Declare internals
