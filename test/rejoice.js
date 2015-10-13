@@ -414,7 +414,6 @@ describe('start()', function () {
         changes.push(setEnv('undefined'));
 
         var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         var modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
