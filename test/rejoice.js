@@ -1,41 +1,41 @@
-// Load modules
+'use strict';
 
-var Fs = require('fs');
-var Os = require('os');
-var Path = require('path');
+const Fs = require('fs');
+const Os = require('os');
+const Path = require('path');
 
-var Code = require('code');
-var Glue = require('glue');
-var Hoek = require('hoek');
-var Lab = require('lab');
-var Rejoice = require('..');
+const Code = require('code');
+const Glue = require('glue');
+const Hoek = require('hoek');
+const Lab = require('lab');
+const Rejoice = require('..');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var after = lab.after;
-var expect = Code.expect;
+const lab = exports.lab = Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const after = lab.after;
+const expect = Code.expect;
 
-describe('start()', function () {
+describe('start()', () => {
 
-    var consoleLog = console.log;
+    const consoleLog = console.log;
     console.log = Hoek.ignore;
 
-    after(function (done) {
+    after((done) => {
 
         console.log = consoleLog;
         done();
     });
 
-    var manifestFile = {
+    const manifestFile = {
         server: {
             cache: {
                 engine: 'catbox-memory'
@@ -55,14 +55,14 @@ describe('start()', function () {
         }
     };
 
-    it('composes server with absolute path', function (done) {
+    it('composes server with absolute path', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
-        var compose = Glue.compose;
+        const compose = Glue.compose;
 
         Glue.compose = function (manifest, packOptions, callback) {
 
@@ -70,7 +70,7 @@ describe('start()', function () {
             expect(manifest.server).to.exist();
             expect(packOptions.relativeTo).to.be.a.string();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -90,17 +90,17 @@ describe('start()', function () {
         });
     });
 
-    it('composes server with an extra module', function (done) {
+    it('composes server with an extra module', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
-        var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        var extra = 'console.log(\'test passed\')';
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
+        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const extra = 'console.log(\'test passed\')';
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
         Fs.writeFileSync(extraPath, extra);
 
-        var compose = Glue.compose;
+        const compose = Glue.compose;
 
         Glue.compose = function (manifest, packOptions, callback) {
 
@@ -110,7 +110,7 @@ describe('start()', function () {
 
             packOptions.relativeTo = modulePath;
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -131,16 +131,16 @@ describe('start()', function () {
         });
     });
 
-    it('uses the --p option when loading extra modules by name', function (done) {
+    it('uses the --p option when loading extra modules by name', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
-        var compose = Glue.compose;
-        var realpathSync = Fs.realpathSync;
-        var consoleError = console.error;
+        const compose = Glue.compose;
+        const realpathSync = Fs.realpathSync;
+        const consoleError = console.error;
 
         console.error = function (value) {
 
@@ -159,7 +159,7 @@ describe('start()', function () {
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -180,16 +180,16 @@ describe('start()', function () {
         });
     });
 
-    it('uses the --p option when loading extra modules by relative path', function (done) {
+    it('uses the --p option when loading extra modules by relative path', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
-        var compose = Glue.compose;
-        var realpathSync = Fs.realpathSync;
-        var consoleError = console.error;
+        const compose = Glue.compose;
+        const realpathSync = Fs.realpathSync;
+        const consoleError = console.error;
 
         console.error = function (value) {
 
@@ -208,7 +208,7 @@ describe('start()', function () {
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -229,14 +229,14 @@ describe('start()', function () {
         });
     });
 
-    it('exits the process if the extra module can not be loaded', function (done) {
+    it('exits the process if the extra module can not be loaded', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
-        var exit = process.exit;
-        var consoleError = console.error;
+        const exit = process.exit;
+        const consoleError = console.error;
 
         console.error = function (string, path) {
 
@@ -261,25 +261,25 @@ describe('start()', function () {
         });
     });
 
-    it('loads a manifest with a relative path', function (done) {
+    it('loads a manifest with a relative path', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var m = Hoek.clone(manifestFile);
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const m = Hoek.clone(manifestFile);
 
         m.plugins = {};
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
-        var relativePath = Path.relative(process.cwd(), configPath);
+        const relativePath = Path.relative(process.cwd(), configPath);
 
-        var compose = Glue.compose;
+        const compose = Glue.compose;
 
         Glue.compose = function (manifest, packOptions, callback) {
 
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -299,14 +299,14 @@ describe('start()', function () {
         });
     });
 
-    it('exits the process if the manifest file files to parse', function (done) {
+    it('exits the process if the manifest file files to parse', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile) + ']]');
 
-        var exit = process.exit;
-        var consoleError = console.error;
+        const exit = process.exit;
+        const consoleError = console.error;
 
         console.error = function (value) {
 
@@ -330,16 +330,16 @@ describe('start()', function () {
         });
     });
 
-    it('will error if there is an error loading packs from -p', function (done) {
+    it('will error if there is an error loading packs from -p', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
-        var realpath = Fs.realpath;
-        var consoleError = console.error;
-        var exit = process.exit;
+        const realpath = Fs.realpath;
+        const consoleError = console.error;
+        const exit = process.exit;
 
         console.error = function (value) {
 
@@ -369,9 +369,9 @@ describe('start()', function () {
         });
     });
 
-    it('parses $prefixed values as environment variable values', { parallel: false }, function (done) {
+    it('parses $prefixed values as environment variable values', { parallel: false }, (done) => {
 
-        var m = Hoek.clone(manifestFile);
+        const m = Hoek.clone(manifestFile);
 
         m.server.app.my = '$env.special_value';
         m.connections = [
@@ -391,10 +391,10 @@ describe('start()', function () {
             }
         };
 
-        var changes = [];
-        var setEnv = function (key, value) {
+        const changes = [];
+        const setEnv = function (key, value) {
 
-            var previous = process.env[key];
+            const previous = process.env[key];
 
             if (typeof value === 'undefined') {
                 delete process.env[key];
@@ -413,12 +413,12 @@ describe('start()', function () {
         // Ensure that the 'undefined' environment variable is *not* set.
         changes.push(setEnv('undefined'));
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
-        var compose = Glue.compose;
+        const compose = Glue.compose;
 
         Glue.compose = function (manifest, packOptions, callback) {
 
@@ -433,7 +433,7 @@ describe('start()', function () {
                 my: 'special-value'
             });
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -444,7 +444,7 @@ describe('start()', function () {
                     Fs.unlinkSync(configPath);
 
                     // Put the env variables back
-                    var restore = changes.pop();
+                    let restore = changes.pop();
                     while (restore) {
                         restore();
                         restore = changes.pop();
@@ -460,10 +460,10 @@ describe('start()', function () {
         });
     });
 
-    it('exits the process if the arguments are invalid', function (done) {
+    it('exits the process if the arguments are invalid', (done) => {
 
-        var consoleError = console.error;
-        var exit = process.exit;
+        const consoleError = console.error;
+        const exit = process.exit;
 
         console.error = function (value) {
 
@@ -484,9 +484,9 @@ describe('start()', function () {
         });
     });
 
-    it('prints help with the -h argument', function (done) {
+    it('prints help with the -h argument', (done) => {
 
-        var exit = process.exit;
+        const exit = process.exit;
 
         console.log = function (value) {
 
@@ -507,27 +507,27 @@ describe('start()', function () {
         });
     });
 
-    it('throws an error if there are problems loading the plugins', function (done) {
+    it('throws an error if there are problems loading the plugins', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
-        var m = Hoek.clone(manifestFile);
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
+        const m = Hoek.clone(manifestFile);
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
-        var compose = Glue.compose;
+        const compose = Glue.compose;
 
         Glue.compose = function (manifest, packOptions, callback) {
 
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
 
-                expect(function () {
+                expect(() => {
 
                     callback(new Error('mock error'), server);
                 }).to.throw(Error, /mock error/);
@@ -544,22 +544,22 @@ describe('start()', function () {
         });
     });
 
-    it('throws an error if there is a problem starting the server', function (done) {
+    it('throws an error if there is a problem starting the server', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
-        var m = Hoek.clone(manifestFile);
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
+        const m = Hoek.clone(manifestFile);
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
-        var compose = Glue.compose;
+        const compose = Glue.compose;
 
         Glue.compose = function (manifest, packOptions, callback) {
 
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
@@ -569,7 +569,7 @@ describe('start()', function () {
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
 
-                    expect(function () {
+                    expect(() => {
 
                         cb(new Error('mock error'));
                     }).to.throw(Error, /mock error/);
@@ -586,17 +586,17 @@ describe('start()', function () {
         });
     });
 
-    it('kills the process on SIGQUIT and restarts on SIGUSR2', function (done) {
+    it('kills the process on SIGQUIT and restarts on SIGUSR2', (done) => {
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var modulePath = Path.join(__dirname, 'plugins');
-        var m = Hoek.clone(manifestFile);
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
+        const m = Hoek.clone(manifestFile);
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
-        var compose = Glue.compose;
-        var exit = process.exit;
-        var start = Rejoice.start;
+        const compose = Glue.compose;
+        const exit = process.exit;
+        const start = Rejoice.start;
 
         // There are many of these already attached
         process.removeAllListeners('SIGUSR2');
@@ -607,7 +607,7 @@ describe('start()', function () {
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, function (err, server) {
+            compose(manifest, packOptions, (err, server) => {
 
                 expect(err).to.not.exist();
                 expect(server).to.exist();
