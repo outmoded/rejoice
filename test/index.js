@@ -47,9 +47,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
@@ -96,9 +98,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
@@ -150,9 +154,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
@@ -201,9 +207,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
@@ -254,9 +262,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
@@ -307,9 +317,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const extra = 'console.log(\'test passed\')';
@@ -363,9 +375,11 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
@@ -436,11 +450,16 @@ describe('bin/rejoice', () => {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--options': {
-                    key: '$env.plugin_option'
+            registrations: [
+                {
+                    plugin: {
+                        register: './--options',
+                        options: {
+                            key: '$env.plugin_option'
+                        }
+                    }
                 }
-            }
+            ]
         };
 
         const changes = [];

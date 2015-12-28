@@ -50,9 +50,11 @@ describe('start()', () => {
                 labels: ['api', 'nasty', 'test']
             }
         ],
-        plugins: {
-            './--loaded': {}
-        }
+        registrations: [
+            {
+                plugin: './--loaded'
+            }
+        ]
     };
 
     it('composes server with absolute path', (done) => {
@@ -66,7 +68,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.plugins['./--loaded']).to.exist();
+            expect(manifest.registrations[0].plugin[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions.relativeTo).to.be.a.string();
 
@@ -104,7 +106,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.plugins['./--loaded']).to.exist();
+            expect(manifest.registrations[0].plugin[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
@@ -155,7 +157,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.plugins['./--loaded']).to.exist();
+            expect(manifest.registrations[0].plugin[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
@@ -204,7 +206,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.plugins['./--loaded']).to.exist();
+            expect(manifest.registrations[0].plugin[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
@@ -266,7 +268,8 @@ describe('start()', () => {
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         const m = Hoek.clone(manifestFile);
 
-        m.plugins = {};
+//        m.plugins = {};
+        m.registrations = [];
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
 
@@ -385,11 +388,16 @@ describe('start()', () => {
                 labels: ['api', 'nice']
             }
         ];
-        m.plugins = {
-            './--options': {
-                key: '$env.plugin_option'
+        m.registrations = [
+            {
+                plugin: {
+                    register: './--options',
+                    options: {
+                        key: '$env.plugin_option'
+                    }
+                }
             }
-        };
+        ];
 
         const changes = [];
         const setEnv = function (key, value) {
@@ -426,7 +434,7 @@ describe('start()', () => {
             expect(manifest.connections[0].port).to.be.undefined();
             expect(manifest.connections[1].port).to.equal('0');
             expect(manifest.connections[1].host).to.equal('localhost');
-            expect(manifest.plugins['./--options']).to.deep.equal({
+            expect(manifest.registrations[0].plugin.options).to.deep.equal({
                 key: 'plugin-option'
             });
             expect(manifest.server.app).to.deep.equal({
