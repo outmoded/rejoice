@@ -268,7 +268,6 @@ describe('start()', () => {
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
         const m = Hoek.clone(manifestFile);
 
-//        m.plugins = {};
         m.registrations = [];
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
