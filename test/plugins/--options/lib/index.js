@@ -1,6 +1,6 @@
-// Declare internals
+'use strict';
 
-var internals = {};
+const internals = {};
 
 
 // Plugin registration
@@ -9,7 +9,7 @@ exports.register = function (plugin, options, next) {
 
     // Need to wait until the server starts to make sure that the port can
     // be bound to successfully.
-    plugin.on('start', function () {
+    plugin.on('start', () => {
 
         console.log('app.my: %s, options.key: %s', plugin.settings.app.my, options.key);
     });

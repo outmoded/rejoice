@@ -1,32 +1,32 @@
-// Load modules
+'use strict';
 
-var ChildProcess = require('child_process');
-var Fs = require('fs');
-var Os = require('os');
-var Path = require('path');
-var Code = require('code');
-var Hoek = require('hoek');
-var Lab = require('lab');
+const ChildProcess = require('child_process');
+const Fs = require('fs');
+const Os = require('os');
+const Path = require('path');
+const Code = require('code');
+const Hoek = require('hoek');
+const Lab = require('lab');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('bin/rejoice', function () {
+describe('bin/rejoice', () => {
 
-    it('composes server with absolute path', function (done) {
+    it('composes server with absolute path', (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -47,19 +47,21 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
-        hapi.stdout.on('data', function (data) {
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.equal('loaded\n');
             hapi.kill();
@@ -68,15 +70,15 @@ describe('bin/rejoice', function () {
             done();
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
     });
 
-    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, function (done) {
+    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -96,22 +98,24 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
-        var symlinkPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
+        const symlinkPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
 
         Fs.symlinkSync(modulePath, symlinkPath, 'dir');
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', symlinkPath]);
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', symlinkPath]);
 
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.equal('loaded\n');
             hapi.kill();
@@ -122,15 +126,15 @@ describe('bin/rejoice', function () {
             done();
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
     });
 
-    it('fails when path cannot be resolved', function (done) {
+    it('fails when path cannot be resolved', (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -150,24 +154,26 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', 'somethingWrong']);
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', 'somethingWrong']);
 
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.include('ENOENT');
 
@@ -179,9 +185,9 @@ describe('bin/rejoice', function () {
         });
     });
 
-    it('errors when it cannot require the extra module', function (done) {
+    it('errors when it cannot require the extra module', (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -201,26 +207,28 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var extraPath = 'somecoolmodule';
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const extraPath = 'somecoolmodule';
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath]);
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath]);
 
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.include('Cannot find module');
 
@@ -232,9 +240,9 @@ describe('bin/rejoice', function () {
         });
     });
 
-    it('errors when it cannot require the extra module from absolute path', function (done) {
+    it('errors when it cannot require the extra module from absolute path', (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -254,26 +262,28 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath]);
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath]);
 
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.include('Cannot find module');
 
@@ -285,9 +295,9 @@ describe('bin/rejoice', function () {
         });
     });
 
-    it('loads extra modules as intended', function (done) {
+    it('loads extra modules as intended', (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -307,24 +317,26 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var extra = 'console.log(\'test passed\')';
+        const extra = 'console.log(\'test passed\')';
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
         Fs.writeFileSync(extraPath, extra);
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath]);
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath, '--require', extraPath]);
 
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.equal('test passed\n');
             hapi.kill();
@@ -335,15 +347,15 @@ describe('bin/rejoice', function () {
             done();
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
     });
 
-    it('loads multiple extra modules as intended', function (done) {
+    it('loads multiple extra modules as intended', (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -363,23 +375,25 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--loaded': {}
-            }
+            registrations: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
         };
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var args = [rejoice, '-c', configPath, '-p', modulePath];
+        const args = [rejoice, '-c', configPath, '-p', modulePath];
 
-        var EXTRAS_TO_CREATE = 2;
-        var extraPaths = [];
-        for (var i = 0; i < EXTRAS_TO_CREATE; i++) {
-            var extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const EXTRAS_TO_CREATE = 2;
+        const extraPaths = [];
+        for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
+            const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
 
             Fs.writeFileSync(extraPath, 'console.log(\'test ' + i + ' passed\')');
 
@@ -388,10 +402,10 @@ describe('bin/rejoice', function () {
             extraPaths.push(extraPath);
         }
 
-        var hapi = ChildProcess.spawn('node', args);
-        var dataCount = 0;
+        const hapi = ChildProcess.spawn('node', args);
+        let dataCount = 0;
 
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data.toString()).to.equal('test ' + dataCount + ' passed\n');
 
@@ -400,23 +414,23 @@ describe('bin/rejoice', function () {
 
                 Fs.unlinkSync(configPath);
 
-                for (var j = 0; j < EXTRAS_TO_CREATE; j++) {
-                    Fs.unlinkSync(extraPaths[j]);
+                for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
+                    Fs.unlinkSync(extraPaths[i]);
                 }
 
                 done();
             }
         });
 
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
     });
 
-    it('parses $prefixed values as environment variable values', { parallel: false }, function (done) {
+    it('parses $prefixed values as environment variable values', { parallel: false }, (done) => {
 
-        var manifest = {
+        const manifest = {
             server: {
                 cache: {
                     engine: 'catbox-memory'
@@ -436,17 +450,22 @@ describe('bin/rejoice', function () {
                     labels: ['api', 'nice']
                 }
             ],
-            plugins: {
-                './--options': {
-                    key: '$env.plugin_option'
+            registrations: [
+                {
+                    plugin: {
+                        register: './--options',
+                        options: {
+                            key: '$env.plugin_option'
+                        }
+                    }
                 }
-            }
+            ]
         };
 
-        var changes = [];
-        var setEnv = function (key, value) {
+        const changes = [];
+        const setEnv = function (key, value) {
 
-            var previous = process.env[key];
+            const previous = process.env[key];
 
             if (typeof value === 'undefined') {
                 delete process.env[key];
@@ -465,22 +484,22 @@ describe('bin/rejoice', function () {
         // Ensure that the 'undefined' environment variable is *not* set.
         changes.push(setEnv('undefined'));
 
-        var configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        var rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-        var modulePath = Path.join(__dirname, 'plugins');
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
 
-        var hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
 
         hapi.stdout.setEncoding('utf8');
-        hapi.stdout.on('data', function (data) {
+        hapi.stdout.on('data', (data) => {
 
             expect(data).to.equal('app.my: special-value, options.key: plugin-option\n');
             hapi.kill();
             Fs.unlinkSync(configPath);
 
-            var restore = changes.pop();
+            let restore = changes.pop();
             while (restore) {
                 restore();
                 restore = changes.pop();
@@ -490,7 +509,7 @@ describe('bin/rejoice', function () {
         });
 
         hapi.stderr.setEncoding('utf8');
-        hapi.stderr.on('data', function (data) {
+        hapi.stderr.on('data', (data) => {
 
             expect(data).to.not.exist();
         });

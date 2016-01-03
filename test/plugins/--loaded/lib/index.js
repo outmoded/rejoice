@@ -1,6 +1,6 @@
-// Declare internals
+'use strict';
 
-var internals = {};
+const internals = {};
 
 
 // Plugin registration

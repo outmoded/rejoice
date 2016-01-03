@@ -52,26 +52,33 @@ where app.json may look something like:
             "sampleInterval": 1000
         }
     },
-    "plugins": {
-        "good": {
-            "opsInterval": 5000,
-            "requestHeaders": true,
-            "reporters": [{
-                "reporter": "good-console",
-                "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
-            },
-            {
-                "reporter": "good-file",
-                "events": { "response": "*", "error": "*" },
-                "config": "/log/response.log"
-            },
-            {
-                "reporter": "good-file",
-                "events": { "ops": "*" },
-                "config": "/log/ops.log"
-            }]
+    "registrations": [
+        {
+            plugin: {
+                register: "good",
+                options: {
+                    "opsInterval": 5000,
+                    "requestHeaders": true,
+                    "reporters": [{
+                        "reporter": "good-console",
+                        "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
+                    },
+                    {
+                        "reporter": "good-file",
+                        "events": { "response": "*", "error": "*" },
+                        "config": "/log/response.log"
+                    },
+                    {
+                        "reporter": "good-file",
+                        "events": { "ops": "*" },
+                        "config": "/log/ops.log"
+                    }]
+                }
+            }
         },
-        "lout": {}
+        {
+            plugin: "lout"
+        }
     }
 }
 ```
