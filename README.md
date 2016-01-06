@@ -54,9 +54,9 @@ where app.json may look something like:
     },
     "registrations": [
         {
-            plugin: {
-                register: "good",
-                options: {
+            "plugin": {
+                "register": "good",
+                "options": {
                     "opsInterval": 5000,
                     "requestHeaders": true,
                     "reporters": [{
@@ -77,9 +77,9 @@ where app.json may look something like:
             }
         },
         {
-            plugin: "lout"
+            "plugin": "lout"
         }
-    }
+    ]
 }
 ```
 
@@ -102,18 +102,25 @@ This will allow your plugins to use relative paths in the config file.  See the 
             ]
         }
     ],
-    "plugins": {
-        "good": {
-            "opsInterval": 5000,
-            "requestHeaders": true,
-            "reporters": [{
-                "reporter": "good-console",
-                "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
-            }],
+    "registrations": [
+        "plugin": {
+            "register": "good",
+            "options": {
+                "opsInterval": 5000,
+                "requestHeaders": true,
+                "reporters": [{
+                    "reporter": "good-console",
+                    "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
+                }]
+            }
         },
-        "lout": {},
-        "./myplugin": {}
-    }
+        {
+            "plugin": "lout"
+        },
+        {
+            "plugin": "./myplugin"
+        }
+    ]
 }
 ```
 
