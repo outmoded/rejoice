@@ -103,15 +103,17 @@ This will allow your plugins to use relative paths in the config file.  See the 
         }
     ],
     "registrations": [
-        "plugin": {
-            "register": "good",
-            "options": {
-                "opsInterval": 5000,
-                "requestHeaders": true,
-                "reporters": [{
-                    "reporter": "good-console",
-                    "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
-                }]
+        {
+            "plugin": {
+                "register": "good",
+                "options": {
+                    "opsInterval": 5000,
+                    "requestHeaders": true,
+                    "reporters": [{
+                        "reporter": "good-console",
+                        "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
+                    }]
+                }
             }
         },
         {
