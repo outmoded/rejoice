@@ -132,6 +132,96 @@ describe('bin/rejoice', () => {
         });
     });
 
+    it('composes server with preConnections callback', (done) => {
+
+        const manifest = 'module.exports = { \
+            connections: [ \
+                { \
+                    port: 0, \
+                    labels: ["api", "nasty", "test"] \
+                }, \
+                { \
+                    host: "localhost", \
+                    port: 0, \
+                    labels: ["api", "nice"] \
+                } \
+            ], \
+            preConnections: function(server, next) { \
+              console.log("Inside `preConnections` function."); \
+              next(); \
+            } \
+        };';
+
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+
+        Fs.writeFileSync(configPath, manifest);
+
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
+
+        hapi.stdout.on('data', (data) => {
+
+            expect(data.toString()).to.include('preConnections');
+            hapi.kill();
+            Fs.unlinkSync(configPath);
+
+            done();
+        });
+
+        hapi.stderr.on('data', (data) => {
+
+            expect(data.toString()).to.not.exist();
+        });
+    });
+
+    it('composes server with preRegister callback', (done) => {
+
+        const manifest = 'module.exports = { \
+            connections: [ \
+                { \
+                    port: 0, \
+                    labels: ["api", "nasty", "test"] \
+                }, \
+                { \
+                    host: "localhost", \
+                    port: 0, \
+                    labels: ["api", "nice"] \
+                } \
+            ], \
+            registrations: [ \
+                { \
+                    plugin: "./--loaded" \
+                } \
+            ], \
+            preRegister: function(server, next) { \
+              console.log("Inside `preRegister` function."); \
+              next(); \
+            } \
+        };';
+
+        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
+        const modulePath = Path.join(__dirname, 'plugins');
+
+        Fs.writeFileSync(configPath, manifest);
+
+        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
+
+        hapi.stdout.on('data', (data) => {
+
+            expect(data.toString()).to.include('preRegister');
+            hapi.kill();
+            Fs.unlinkSync(configPath);
+
+            done();
+        });
+
+        hapi.stderr.on('data', (data) => {
+
+            expect(data.toString()).to.not.exist();
+        });
+    });
+
     it('fails when path cannot be resolved', (done) => {
 
         const manifest = {
