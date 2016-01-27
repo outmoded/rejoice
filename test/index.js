@@ -155,7 +155,7 @@ describe('bin/rejoice', () => {
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
-        Fs.writeFileSync(configPath, manifest);
+        Fs.writeFileSync(configPath, manifest, 'utf8');
 
         const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
 
@@ -194,7 +194,7 @@ describe('bin/rejoice', () => {
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
-        Fs.writeFileSync(configPath, manifest);
+        Fs.writeFileSync(configPath, manifest, 'utf8');
 
         const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
 
@@ -205,7 +205,7 @@ describe('bin/rejoice', () => {
 
         hapi.stderr.on('data', (data) => {
 
-            expect(data.toString()).to.include('"preConnections" must be a Function');
+            expect(data.toString()).to.include('ValidationError');
 
             hapi.kill();
 
@@ -244,7 +244,7 @@ describe('bin/rejoice', () => {
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
-        Fs.writeFileSync(configPath, manifest);
+        Fs.writeFileSync(configPath, manifest, 'utf8');
 
         const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath, '-p', modulePath]);
 
@@ -283,7 +283,7 @@ describe('bin/rejoice', () => {
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
-        Fs.writeFileSync(configPath, manifest);
+        Fs.writeFileSync(configPath, manifest, 'utf8');
 
         const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
 
@@ -294,7 +294,7 @@ describe('bin/rejoice', () => {
 
         hapi.stderr.on('data', (data) => {
 
-            expect(data.toString()).to.include('"preRegister" must be a Function');
+            expect(data.toString()).to.include('ValidationError');
 
             hapi.kill();
 
