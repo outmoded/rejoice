@@ -174,47 +174,6 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('fails if typeof preConnections is not a `function`', (done) => {
-
-        const manifest = 'module.exports = { \
-            connections: [ \
-                { \
-                    port: 0, \
-                    labels: ["api", "nasty", "test"] \
-                }, \
-                { \
-                    host: "localhost", \
-                    port: 0, \
-                    labels: ["api", "nice"] \
-                } \
-            ], \
-            preConnections: "someValue" \
-        };';
-
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-
-        Fs.writeFileSync(configPath, manifest, 'utf8');
-
-        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
-
-        hapi.stdout.on('data', (data) => {
-
-            expect(data.toString()).to.not.exist();
-        });
-
-        hapi.stderr.on('data', (data) => {
-
-            expect(data.toString()).to.include('ValidationError');
-
-            hapi.kill();
-
-            Fs.unlinkSync(configPath);
-
-            done();
-        });
-    });
-
     it('composes server with preRegister callback', (done) => {
 
         const manifest = 'module.exports = { \
@@ -260,47 +219,6 @@ describe('bin/rejoice', () => {
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
-        });
-    });
-
-    it('fails if typeof preRegister is not a `function`', (done) => {
-
-        const manifest = 'module.exports = { \
-            connections: [ \
-                { \
-                    port: 0, \
-                    labels: ["api", "nasty", "test"] \
-                }, \
-                { \
-                    host: "localhost", \
-                    port: 0, \
-                    labels: ["api", "nice"] \
-                } \
-            ], \
-            preRegister: "someValue" \
-        };';
-
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-
-        Fs.writeFileSync(configPath, manifest, 'utf8');
-
-        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
-
-        hapi.stdout.on('data', (data) => {
-
-            expect(data.toString()).to.not.exist();
-        });
-
-        hapi.stderr.on('data', (data) => {
-
-            expect(data.toString()).to.include('ValidationError');
-
-            hapi.kill();
-
-            Fs.unlinkSync(configPath);
-
-            done();
         });
     });
 
