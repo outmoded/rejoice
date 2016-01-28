@@ -134,23 +134,7 @@ describe('bin/rejoice', () => {
 
     it('composes server with preConnections callback', (done) => {
 
-        const manifest = 'module.exports = { \
-            connections: [ \
-                { \
-                    port: 0, \
-                    labels: ["api", "nasty", "test"] \
-                }, \
-                { \
-                    host: "localhost", \
-                    port: 0, \
-                    labels: ["api", "nice"] \
-                } \
-            ], \
-            preConnections: function(server, next) { \
-              console.log("Inside `preConnections` function."); \
-              next(); \
-            } \
-        };';
+        const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preConnections.js'), 'utf8');
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
@@ -176,28 +160,7 @@ describe('bin/rejoice', () => {
 
     it('composes server with preRegister callback', (done) => {
 
-        const manifest = 'module.exports = { \
-            connections: [ \
-                { \
-                    port: 0, \
-                    labels: ["api", "nasty", "test"] \
-                }, \
-                { \
-                    host: "localhost", \
-                    port: 0, \
-                    labels: ["api", "nice"] \
-                } \
-            ], \
-            registrations: [ \
-                { \
-                    plugin: "./--loaded" \
-                } \
-            ], \
-            preRegister: function(server, next) { \
-              console.log("Inside `preRegister` function."); \
-              next(); \
-            } \
-        };';
+        const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preRegister.js'), 'utf8');
 
         const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
