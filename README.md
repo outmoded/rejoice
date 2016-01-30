@@ -126,6 +126,25 @@ This will allow your plugins to use relative paths in the config file.  See the 
 }
 ```
 
+When using regular JS file, you may add `preConnections` or `preRegister` callbacks. See the example below.
+
+```javascript
+module.exports = {
+  connections: [ '...' ],
+  registrations: [ '...' ],
+  preConnections: function(server, next) {
+    // your preConnections logic goes here
+    next();
+  },
+  preRegister: function(server, next) {
+    // your preRegister logic goes here
+    next();
+  }
+};
+```
+
+For more information about these options, see [Glue's API](https://github.com/hapijs/glue/blob/master/API.md).
+
 If you need a module required before your application is loaded you can use the `-r` flag.
 
 ```javascript
