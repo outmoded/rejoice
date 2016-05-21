@@ -433,10 +433,10 @@ describe('start()', () => {
             expect(manifest.connections[0].port).to.be.undefined();
             expect(manifest.connections[1].port).to.equal('0');
             expect(manifest.connections[1].host).to.equal('localhost');
-            expect(manifest.registrations[0].plugin.options).to.deep.equal({
+            expect(manifest.registrations[0].plugin.options).to.equal({
                 key: 'plugin-option'
             });
-            expect(manifest.server.app).to.deep.equal({
+            expect(manifest.server.app).to.equal({
                 my: 'special-value'
             });
 
@@ -641,7 +641,7 @@ describe('start()', () => {
 
                         Rejoice.start = start;
 
-                        expect(options).to.deep.equal({
+                        expect(options).to.equal({
                             args: ['-c', configPath, '-p', modulePath]
                         });
 
