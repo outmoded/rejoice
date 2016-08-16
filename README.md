@@ -57,22 +57,29 @@ where app.json may look something like:
             "plugin": {
                 "register": "good",
                 "options": {
-                    "opsInterval": 5000,
-                    "requestHeaders": true,
-                    "reporters": [{
-                        "reporter": "good-console",
-                        "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
+                    "ops": {
+                      "interval": 5000
                     },
-                    {
-                        "reporter": "good-file",
-                        "events": { "response": "*", "error": "*" },
-                        "config": "/log/response.log"
-                    },
-                    {
-                        "reporter": "good-file",
-                        "events": { "ops": "*" },
-                        "config": "/log/ops.log"
-                    }]
+                    "reporters": {
+                        "myConsoleReporter": [{
+                            "module": "good-squeeze",
+                            "name": "Squeeze",
+                            "args": [{ "log": "*", "response": "*" }]
+                        }, {
+                            "module": "good-console"
+                        }, "stdout"],
+                        "myFileReporter": [{
+                            "module": "good-squeeze",
+                            "name": "Squeeze",
+                            "args": [{ "ops": "*" }]
+                        }, {
+                            "module": "good-squeeze",
+                            "name": "SafeJson"
+                        }, {
+                            "module": "good-file",
+                            "args": ["./test/fixtures/awesome_log"]
+                        }]
+                    }
                 }
             }
         },
@@ -103,19 +110,6 @@ This will allow your plugins to use relative paths in the config file.  See the 
         }
     ],
     "registrations": [
-        {
-            "plugin": {
-                "register": "good",
-                "options": {
-                    "opsInterval": 5000,
-                    "requestHeaders": true,
-                    "reporters": [{
-                        "reporter": "good-console",
-                        "events": { "response": "*", "ops": "*", "log": "*", "error": "*" }
-                    }]
-                }
-            }
-        },
         {
             "plugin": "lout"
         },
