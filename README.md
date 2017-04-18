@@ -1,4 +1,4 @@
-#rejoice
+# rejoice
 
 hapi.js CLI.
 
