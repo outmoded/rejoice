@@ -54,7 +54,7 @@ describe('bin/rejoice', () => {
             ]
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -105,10 +105,10 @@ describe('bin/rejoice', () => {
             ]
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
-        const symlinkPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const symlinkPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
         Fs.symlinkSync(modulePath, symlinkPath, 'dir');
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
@@ -136,7 +136,7 @@ describe('bin/rejoice', () => {
 
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preConnections.js'), 'utf8');
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
         Fs.writeFileSync(configPath, manifest, 'utf8');
@@ -162,7 +162,7 @@ describe('bin/rejoice', () => {
 
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preRegister.js'), 'utf8');
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -214,7 +214,7 @@ describe('bin/rejoice', () => {
             ]
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
@@ -267,7 +267,7 @@ describe('bin/rejoice', () => {
             ]
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const extraPath = 'somecoolmodule';
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -322,8 +322,8 @@ describe('bin/rejoice', () => {
             ]
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
+        const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -379,8 +379,8 @@ describe('bin/rejoice', () => {
 
         const extra = 'console.log(\'test passed\')';
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
+        const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -435,7 +435,7 @@ describe('bin/rejoice', () => {
             ]
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -446,7 +446,7 @@ describe('bin/rejoice', () => {
         const EXTRAS_TO_CREATE = 2;
         const extraPaths = [];
         for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
-            const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+            const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
 
             Fs.writeFileSync(extraPath, 'console.log(\'test ' + i + ' passed\')');
 
@@ -537,7 +537,7 @@ describe('bin/rejoice', () => {
         // Ensure that the 'undefined' environment variable is *not* set.
         changes.push(setEnv('undefined'));
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 

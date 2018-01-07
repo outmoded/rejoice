@@ -59,7 +59,7 @@ describe('start()', () => {
 
     it('composes server with absolute path', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
@@ -94,9 +94,9 @@ describe('start()', () => {
 
     it('composes server with an extra module', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
-        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const extra = 'console.log(\'test passed\')';
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
@@ -135,7 +135,7 @@ describe('start()', () => {
 
     it('uses the --p option when loading extra modules by name', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
@@ -184,7 +184,7 @@ describe('start()', () => {
 
     it('uses the --p option when loading extra modules by relative path', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
@@ -233,7 +233,7 @@ describe('start()', () => {
 
     it('exits the process if the extra module can not be loaded', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
 
@@ -265,7 +265,7 @@ describe('start()', () => {
 
     it('loads a manifest with a relative path', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const m = Hoek.clone(manifestFile);
 
         m.registrations = [];
@@ -303,7 +303,7 @@ describe('start()', () => {
 
     it('exits the process if the manifest file files to parse', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile) + ']]');
 
@@ -334,7 +334,7 @@ describe('start()', () => {
 
     it('will error if there is an error loading packs from -p', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifestFile));
@@ -420,7 +420,7 @@ describe('start()', () => {
         // Ensure that the 'undefined' environment variable is *not* set.
         changes.push(setEnv('undefined'));
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
 
         Fs.writeFileSync(configPath, JSON.stringify(m));
@@ -516,7 +516,7 @@ describe('start()', () => {
 
     it('throws an error if there are problems loading the plugins', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
         const m = Hoek.clone(manifestFile);
 
@@ -553,7 +553,7 @@ describe('start()', () => {
 
     it('throws an error if there is a problem starting the server', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
         const m = Hoek.clone(manifestFile);
 
@@ -595,7 +595,7 @@ describe('start()', () => {
 
     it('kills the process on SIGQUIT and restarts on SIGUSR2', (done) => {
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
         const m = Hoek.clone(manifestFile);
 
