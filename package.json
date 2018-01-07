@@ -1,7 +1,7 @@
 {
   "name": "rejoice",
   "description": "hapi.js CLI",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "repository": "git://github.com/hapijs/rejoice",
   "main": "lib/index.js",
   "keywords": [
@@ -11,18 +11,18 @@
     "command"
   ],
   "engines": {
-    "node": ">=4"
+    "node": ">=8.9.0"
   },
   "dependencies": {
-    "bossy": "3.x.x",
-    "glue": "4.x.x",
-    "hoek": "4.x.x"
+    "bossy": "4.x.x",
+    "glue": "5.x.x",
+    "hoek": "5.x.x"
   },
   "devDependencies": {
-    "catbox-memory": "2.x.x",
-    "code": "4.x.x",
-    "hapi": "16.x.x",
-    "lab": "11.x.x"
+    "catbox-memory": "3.x.x",
+    "code": "5.x.x",
+    "hapi": "17.x.x",
+    "lab": "15.x.x"
   },
   "bin": {
     "rejoice": "./bin/rejoice"
