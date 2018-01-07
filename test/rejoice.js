@@ -29,10 +29,9 @@ describe('start()', () => {
     const consoleLog = console.log;
     console.log = Hoek.ignore;
 
-    after((done) => {
+    after(() => {
 
         console.log = consoleLog;
-        done();
     });
 
     const manifestFile = {
@@ -57,7 +56,7 @@ describe('start()', () => {
         ]
     };
 
-    it('composes server with absolute path', (done) => {
+    it('composes server with absolute path', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -81,7 +80,6 @@ describe('start()', () => {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
-                    done();
                 };
                 callback(err, server);
             });
@@ -92,7 +90,7 @@ describe('start()', () => {
         });
     });
 
-    it('composes server with an extra module', (done) => {
+    it('composes server with an extra module', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -122,7 +120,6 @@ describe('start()', () => {
                     Glue.compose = compose;
                     Fs.unlinkSync(extraPath);
                     Fs.unlinkSync(configPath);
-                    done();
                 };
                 callback(err, server);
             });
@@ -133,7 +130,7 @@ describe('start()', () => {
         });
     });
 
-    it('uses the --p option when loading extra modules by name', (done) => {
+    it('uses the --p option when loading extra modules by name', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -171,7 +168,6 @@ describe('start()', () => {
                     Glue.compose = compose;
                     console.error = consoleError;
                     Fs.unlinkSync(configPath);
-                    done();
                 };
                 callback(err, server);
             });
@@ -182,7 +178,7 @@ describe('start()', () => {
         });
     });
 
-    it('uses the --p option when loading extra modules by relative path', (done) => {
+    it('uses the --p option when loading extra modules by relative path', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -220,7 +216,6 @@ describe('start()', () => {
                     Glue.compose = compose;
                     console.error = consoleError;
                     Fs.unlinkSync(configPath);
-                    done();
                 };
                 callback(err, server);
             });
@@ -231,7 +226,7 @@ describe('start()', () => {
         });
     });
 
-    it('exits the process if the extra module can not be loaded', (done) => {
+    it('exits the process if the extra module can not be loaded', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
@@ -254,8 +249,6 @@ describe('start()', () => {
             console.error = consoleError;
 
             Fs.unlinkSync(configPath);
-
-            done();
         };
 
         Rejoice.start({
@@ -263,7 +256,7 @@ describe('start()', () => {
         });
     });
 
-    it('loads a manifest with a relative path', (done) => {
+    it('loads a manifest with a relative path', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const m = Hoek.clone(manifestFile);
@@ -290,7 +283,6 @@ describe('start()', () => {
 
                     Glue.compose = compose;
                     Fs.unlinkSync(configPath);
-                    done();
                 };
                 callback(err, server);
             });
@@ -301,7 +293,7 @@ describe('start()', () => {
         });
     });
 
-    it('exits the process if the manifest file files to parse', (done) => {
+    it('exits the process if the manifest file files to parse', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
@@ -323,8 +315,6 @@ describe('start()', () => {
             console.error = consoleError;
 
             Fs.unlinkSync(configPath);
-
-            done();
         };
 
         Rejoice.start({
@@ -332,7 +322,7 @@ describe('start()', () => {
         });
     });
 
-    it('will error if there is an error loading packs from -p', (done) => {
+    it('will error if there is an error loading packs from -p', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -355,7 +345,6 @@ describe('start()', () => {
             console.error = consoleError;
 
             Fs.unlinkSync(configPath);
-            done();
         };
 
 
@@ -371,7 +360,7 @@ describe('start()', () => {
         });
     });
 
-    it('parses $prefixed values as environment variable values', (done) => {
+    it('parses $prefixed values as environment variable values', () => {
 
         const m = Hoek.clone(manifestFile);
 
@@ -456,7 +445,6 @@ describe('start()', () => {
                         restore();
                         restore = changes.pop();
                     }
-                    done();
                 };
                 callback(err, server);
             });
@@ -467,7 +455,7 @@ describe('start()', () => {
         });
     });
 
-    it('exits the process if the arguments are invalid', (done) => {
+    it('exits the process if the arguments are invalid', () => {
 
         const consoleError = console.error;
         const exit = process.exit;
@@ -483,7 +471,6 @@ describe('start()', () => {
             expect(code).to.equal(1);
 
             console.error = consoleError;
-            done();
         };
 
         Rejoice.start({
@@ -491,7 +478,7 @@ describe('start()', () => {
         });
     });
 
-    it('prints help with the -h argument', (done) => {
+    it('prints help with the -h argument', () => {
 
         const exit = process.exit;
 
@@ -506,7 +493,6 @@ describe('start()', () => {
             expect(code).to.equal(1);
 
             console.log = Hoek.ignore;
-            done();
         };
 
         Rejoice.start({
@@ -514,7 +500,7 @@ describe('start()', () => {
         });
     });
 
-    it('throws an error if there are problems loading the plugins', (done) => {
+    it('throws an error if there are problems loading the plugins', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -541,8 +527,6 @@ describe('start()', () => {
 
                 Glue.compose = compose;
                 Fs.unlinkSync(configPath);
-
-                done();
             });
         };
 
@@ -551,7 +535,7 @@ describe('start()', () => {
         });
     });
 
-    it('throws an error if there is a problem starting the server', (done) => {
+    it('throws an error if there is a problem starting the server', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -580,8 +564,6 @@ describe('start()', () => {
 
                         cb(new Error('mock error'));
                     }).to.throw(Error, /mock error/);
-
-                    done();
                 };
 
                 callback(err, server);
@@ -593,7 +575,7 @@ describe('start()', () => {
         });
     });
 
-    it('kills the process on SIGQUIT and restarts on SIGUSR2', (done) => {
+    it('kills the process on SIGQUIT and restarts on SIGUSR2', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -644,8 +626,6 @@ describe('start()', () => {
                         expect(options).to.equal({
                             args: ['-c', configPath, '-p', modulePath]
                         });
-
-                        done();
                     };
 
                     process.emit('SIGQUIT');

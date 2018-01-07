@@ -24,7 +24,7 @@ const expect = Code.expect;
 
 describe('bin/rejoice', () => {
 
-    it('composes server with absolute path', (done) => {
+    it('composes server with absolute path', () => {
 
         const manifest = {
             server: {
@@ -66,8 +66,6 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.equal('loaded\n');
             hapi.kill();
             Fs.unlinkSync(configPath);
-
-            done();
         });
 
         hapi.stderr.on('data', (data) => {
@@ -76,7 +74,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, (done) => {
+    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, () => {
 
         const manifest = {
             server: {
@@ -122,8 +120,6 @@ describe('bin/rejoice', () => {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(symlinkPath);
-
-            done();
         });
 
         hapi.stderr.on('data', (data) => {
@@ -132,7 +128,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('composes server with preConnections callback', (done) => {
+    it('composes server with preConnections callback', () => {
 
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preConnections.js'), 'utf8');
 
@@ -148,8 +144,6 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.include('preConnections');
             hapi.kill();
             Fs.unlinkSync(configPath);
-
-            done();
         });
 
         hapi.stderr.on('data', (data) => {
@@ -158,7 +152,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('composes server with preRegister callback', (done) => {
+    it('composes server with preRegister callback', () => {
 
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preRegister.js'), 'utf8');
 
@@ -175,8 +169,6 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.include('preRegister');
             hapi.kill();
             Fs.unlinkSync(configPath);
-
-            done();
         });
 
         hapi.stderr.on('data', (data) => {
@@ -185,7 +177,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('fails when path cannot be resolved', (done) => {
+    it('fails when path cannot be resolved', () => {
 
         const manifest = {
             server: {
@@ -233,12 +225,10 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
-
-            done();
         });
     });
 
-    it('errors when it cannot require the extra module', (done) => {
+    it('errors when it cannot require the extra module', () => {
 
         const manifest = {
             server: {
@@ -288,12 +278,10 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
-
-            done();
         });
     });
 
-    it('errors when it cannot require the extra module from absolute path', (done) => {
+    it('errors when it cannot require the extra module from absolute path', () => {
 
         const manifest = {
             server: {
@@ -343,12 +331,10 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
-
-            done();
         });
     });
 
-    it('loads extra modules as intended', (done) => {
+    it('loads extra modules as intended', () => {
 
         const manifest = {
             server: {
@@ -396,8 +382,6 @@ describe('bin/rejoice', () => {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(extraPath);
-
-            done();
         });
 
         hapi.stderr.on('data', (data) => {
@@ -406,7 +390,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('loads multiple extra modules as intended', (done) => {
+    it('loads multiple extra modules as intended', () => {
 
         const manifest = {
             server: {
@@ -470,8 +454,6 @@ describe('bin/rejoice', () => {
                 for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
                     Fs.unlinkSync(extraPaths[i]);
                 }
-
-                done();
             }
         });
 
@@ -481,7 +463,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('parses $prefixed values as environment variable values', (done) => {
+    it('parses $prefixed values as environment variable values', () => {
 
         const manifest = {
             server: {
@@ -557,8 +539,6 @@ describe('bin/rejoice', () => {
                 restore();
                 restore = changes.pop();
             }
-
-            done();
         });
 
         hapi.stderr.setEncoding('utf8');
