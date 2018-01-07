@@ -481,7 +481,7 @@ describe('bin/rejoice', () => {
         });
     });
 
-    it('parses $prefixed values as environment variable values', { parallel: false }, (done) => {
+    it('parses $prefixed values as environment variable values', (done) => {
 
         const manifest = {
             server: {
