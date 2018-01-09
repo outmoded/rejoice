@@ -64,7 +64,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.registrations[0].plugin[0]).to.exist();
+            expect(manifest.register.plugins[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions.relativeTo).to.be.a.string();
 
@@ -101,7 +101,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.registrations[0].plugin[0]).to.exist();
+            expect(manifest.register.plugins[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
@@ -151,7 +151,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.registrations[0].plugin[0]).to.exist();
+            expect(manifest.register.plugins[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
@@ -199,7 +199,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.registrations[0].plugin[0]).to.exist();
+            expect(manifest.register.plugins[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
