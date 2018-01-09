@@ -41,19 +41,16 @@ describe('start()', () => {
             },
             app: {
                 my: 'special-value'
-            }
+            },
+            port: 0
         },
-        connections: [
-            {
-                port: 0,
-                labels: ['api', 'nasty', 'test']
-            }
-        ],
-        registrations: [
-            {
-                plugin: './--loaded'
-            }
-        ]
+        register: {
+            plugins: [
+                {
+                    plugin: './--loaded'
+                }
+            ]
+        }
     };
 
     it('composes server with absolute path', () => {
@@ -364,28 +361,21 @@ describe('start()', () => {
 
         const m = Hoek.clone(manifestFile);
 
-        m.server.app.my = '$env.special_value';
-        m.connections = [
-            {
-                port: '$env.undefined',
-                labels: ['api', 'nasty', 'test']
-            },
-            {
-                host: '$env.host',
-                port: '$env.port',
-                labels: ['api', 'nice']
-            }
-        ];
-        m.registrations = [
-            {
-                plugin: {
-                    register: './--options',
+        m.server = {
+            host: '$env.host',
+            port: '$env.port'
+        },
+        m.register = {
+            plugins: [
+                {
+                    plugin: './--options',
                     options: {
                         key: '$env.plugin_option'
                     }
                 }
-            }
-        ];
+            ]
+        };
+        m.server.app.my = '$env.special_value';
 
         const changes = [];
         const setEnv = function (key, value) {
@@ -418,11 +408,10 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-            expect(manifest.connections).to.have.length(2);
-            expect(manifest.connections[0].port).to.be.undefined();
-            expect(manifest.connections[1].port).to.equal('0');
-            expect(manifest.connections[1].host).to.equal('localhost');
-            expect(manifest.registrations[0].plugin.options).to.equal({
+	    console.log(JSON.stringify(manifest.register));
+            expect(manifest.server.port).to.equal('0');
+            expect(manifest.server.host).to.equal('localhost');
+            expect(manifest.register.plugins[0].options).to.equal({
                 key: 'plugin-option'
             });
             expect(manifest.server.app).to.equal({
