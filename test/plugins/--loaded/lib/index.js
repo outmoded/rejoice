@@ -5,14 +5,13 @@ const internals = {};
 
 // Plugin registration
 
-exports.register = function (plugin, options, next) {
+const register = function (server, options) {
 
     console.log('loaded');
-
-    return next();
 };
 
 
-exports.register.attributes = {
-    pkg: require('../package.json')
+module.exports = {
+    pkg: require('../package.json'),
+    register
 };

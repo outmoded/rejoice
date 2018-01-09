@@ -5,19 +5,13 @@ const internals = {};
 
 // Plugin registration
 
-exports.register = function (plugin, options, next) {
+const register = function (server, options) {
 
-    // Need to wait until the server starts to make sure that the port can
-    // be bound to successfully.
-    plugin.on('start', () => {
-
-        console.log('app.my: %s, options.key: %s', plugin.settings.app.my, options.key);
-    });
-
-    return next();
+    console.log('app.my: %s, options.key: %s', server.settings.app.my, options.key);
 };
 
 
-exports.register.attributes = {
-    pkg: require('../package.json')
+module.exports = {
+    pkg: require('../package.json'),
+    register
 };
