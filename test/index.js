@@ -33,25 +33,17 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                host: 'localhost',
+                port: 0
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
@@ -83,24 +75,17 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                host: 'localhost',
+                port: 0
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
@@ -128,6 +113,7 @@ describe('bin/rejoice', () => {
         });
     });
 
+    /*
     it('composes server with preConnections callback', () => {
 
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preConnections.js'), 'utf8');
@@ -151,6 +137,8 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.not.exist();
         });
     });
+
+*/
 
     it('composes server with preRegister callback', () => {
 
@@ -390,6 +378,7 @@ describe('bin/rejoice', () => {
         });
     });
 
+    /*
     it('loads multiple extra modules as intended', () => {
 
         const manifest = {
@@ -462,7 +451,7 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.not.exist();
         });
     });
-
+*/
     it('parses $prefixed values as environment variable values', () => {
 
         const manifest = {
@@ -472,29 +461,20 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: '$env.special_value'
-                }
-            },
-            connections: [
-                {
-                    port: '$env.undefined',
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: '$env.host',
-                    port: '$env.port',
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: {
-                        register: './--options',
+                host: '$env.host',
+                port: '$env.port'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--options',
                         options: {
                             key: '$env.plugin_option'
                         }
                     }
-                }
-            ]
+                ]
+            }
         };
 
         const changes = [];

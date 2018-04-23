@@ -1,17 +1,17 @@
 'use strict';
 
 module.exports = {
-    connections: [{
-        port: 0,
-        labels: ['api', 'nasty', 'test']
-    }, {
+    server: {
         host: 'localhost',
-        port: 0,
-        labels: ['api', 'nice']
-    }],
-    registrations: [{
-        plugin: './--loaded'
-    }],
+        port: 0
+    },
+    register: {
+        plugins: [
+            {
+                plugin: './--loaded'
+            }
+        ]
+    },
     preRegister: function (server, next) {
 
         console.log('Inside `preRegister` function.');

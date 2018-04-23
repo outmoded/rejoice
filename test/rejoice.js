@@ -408,7 +408,7 @@ describe('start()', () => {
 
         Glue.compose = function (manifest, packOptions, callback) {
 
-	    console.log(JSON.stringify(manifest.register));
+            console.log(JSON.stringify(manifest.register));
             expect(manifest.server.port).to.equal('0');
             expect(manifest.server.host).to.equal('localhost');
             expect(manifest.register.plugins[0].options).to.equal({
