@@ -174,24 +174,17 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
@@ -225,24 +218,17 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
@@ -278,24 +264,17 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                host: 'localhost',
+                port: 0
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
@@ -331,24 +310,17 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const extra = 'console.log(\'test passed\')';
@@ -389,23 +361,16 @@ describe('bin/rejoice', () => {
                 app: {
                     my: 'special-value'
                 }
+                port: 0,
+                host: 'localhost'
             },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-                },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
