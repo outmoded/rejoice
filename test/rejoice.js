@@ -128,7 +128,7 @@ describe('start()', () => {
         });
     });
 
-    it.only('uses the --p option when loading extra modules by name', () => {
+    it('uses the --p option when loading extra modules by name', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -150,31 +150,30 @@ describe('start()', () => {
             return process.cwd();
         };
 
-        Glue.compose = function (manifest, packOptions, callback) {
+        Glue.compose = async function (manifest, packOptions) {
 
             expect(manifest.register.plugins[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, (err, server) => {
+            const server = await compose(manifest, packOptions);
 
-                expect(err).to.not.exist();
-                expect(server).to.exist();
+            expect(server).to.exist();
 
-                server.start = function () {
+            server.start = function () {
 
-                    Glue.compose = compose;
-                    console.error = consoleError;
-                    Fs.unlinkSync(configPath);
-                };
-                callback(err, server);
-            });
+                Glue.compose = compose;
+                console.error = consoleError;
+                Fs.unlinkSync(configPath);
+            };
+            return server;
         };
 
         Rejoice.start({
             args: ['-c', configPath, '-p', modulePath, '--require', 'hoek']
         });
     });
+
     it('uses the --p option when loading extra modules by relative path', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
@@ -197,26 +196,23 @@ describe('start()', () => {
             return process.cwd();
         };
 
-        Glue.compose = function (manifest, packOptions, callback) {
+        Glue.compose = async function (manifest, packOptions) {
 
-            //console.log(manifest.register.plugins);
-            //expect(manifest.register.plugins[0]).to.exist();
+            expect(manifest.register.plugins[0]).to.exist();
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, (err, server) => {
+            const server = await compose(manifest, packOptions);
 
-                expect(err).to.not.exist();
-                expect(server).to.exist();
+            expect(server).to.exist();
 
-                server.start = function () {
+            server.start = function () {
 
-                    Glue.compose = compose;
-                    console.error = consoleError;
-                    Fs.unlinkSync(configPath);
-                };
-                callback(err, server);
-            });
+                Glue.compose = compose;
+                console.error = consoleError;
+                Fs.unlinkSync(configPath);
+            };
+            return server;
         };
 
         Rejoice.start({
@@ -254,7 +250,7 @@ describe('start()', () => {
         });
     });
 
-    it.skip('loads a manifest with a relative path', () => {
+    it('loads a manifest with a relative path', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const m = Hoek.clone(manifestFile);
@@ -267,23 +263,21 @@ describe('start()', () => {
 
         const compose = Glue.compose;
 
-        Glue.compose = function (manifest, packOptions, callback) {
+        Glue.compose = async function (manifest, packOptions) {
 
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, (err, server) => {
+            const server = await compose(manifest, packOptions);
 
-                expect(err).to.not.exist();
-                expect(server).to.exist();
+            expect(server).to.exist();
 
-                server.start = function () {
+            server.start = function () {
 
-                    Glue.compose = compose;
-                    Fs.unlinkSync(configPath);
-                };
-                callback(err, server);
-            });
+                Glue.compose = compose;
+                Fs.unlinkSync(configPath);
+            };
+            return server;
         };
 
         Rejoice.start({
@@ -366,7 +360,7 @@ describe('start()', () => {
             host: '$env.host',
             port: '$env.port',
             app: {
-              my: '$env.undefined'
+                my: '$env.undefined'
             }
         },
         m.register = {
@@ -410,9 +404,8 @@ describe('start()', () => {
 
         const compose = Glue.compose;
 
-        Glue.compose = function (manifest, packOptions, callback) {
+        Glue.compose = async function (manifest, packOptions) {
 
-            //console.log(JSON.stringify(manifest));
             expect(manifest.server.port).to.equal('0');
             expect(manifest.server.host).to.equal('localhost');
             expect(manifest.register.plugins[0].options).to.equal({
@@ -422,25 +415,23 @@ describe('start()', () => {
                 my: 'special-value'
             });
 
-            compose(manifest, packOptions, (err, server) => {
+            const server = await compose(manifest, packOptions);
 
-                expect(err).to.not.exist();
-                expect(server).to.exist();
+            expect(server).to.exist();
 
-                server.start = function () {
+            server.start = function () {
 
-                    Glue.compose = compose;
-                    Fs.unlinkSync(configPath);
+                Glue.compose = compose;
+                Fs.unlinkSync(configPath);
 
-                    // Put the env variables back
-                    let restore = changes.pop();
-                    while (restore) {
-                        restore();
-                        restore = changes.pop();
-                    }
-                };
-                callback(err, server);
-            });
+                // Put the env variables back
+                let restore = changes.pop();
+                while (restore) {
+                    restore();
+                    restore = changes.pop();
+                }
+            };
+            return server;
         };
 
         Rejoice.start({
@@ -493,7 +484,7 @@ describe('start()', () => {
         });
     });
 
-    it('throws an error if there are problems loading the plugins', () => {
+    it.only('throws an error if there are problems loading the plugins', () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
