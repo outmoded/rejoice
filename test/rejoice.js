@@ -25,6 +25,13 @@ const after = lab.after;
 const before = lab.before;
 const expect = Code.expect;
 
+process.on('unhandledRejection', (err) => {
+
+    process.stdout.write(err.toString());
+    process.stdout.write(err.stack);
+    process.exit(1);
+});
+
 describe('start()', () => {
 
     let consoleLog;
@@ -58,7 +65,7 @@ describe('start()', () => {
         }
     };
 
-    it('composes server with absolute path', () => {
+    it('composes server with absolute path', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -85,12 +92,12 @@ describe('start()', () => {
             return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath]
         });
     });
 
-    it('composes server with an extra module', () => {
+    it('composes server with an extra module', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -123,12 +130,12 @@ describe('start()', () => {
             return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '--require', extraPath]
         });
     });
 
-    it('uses the --p option when loading extra modules by name', () => {
+    it('uses the --p option when loading extra modules by name', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -169,12 +176,12 @@ describe('start()', () => {
             return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath, '--require', 'hoek']
         });
     });
 
-    it('uses the --p option when loading extra modules by relative path', () => {
+    it('uses the --p option when loading extra modules by relative path', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -187,6 +194,7 @@ describe('start()', () => {
 
         console.error = function (value) {
 
+            process.stdout.write(value.toString());
             expect(value).to.not.exist();
         };
 
@@ -215,12 +223,12 @@ describe('start()', () => {
             return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath, '--require', './node_modules/hoek']
         });
     });
 
-    it('exits the process if the extra module can not be loaded', () => {
+    it('exits the process if the extra module can not be loaded', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
@@ -245,12 +253,12 @@ describe('start()', () => {
             Fs.unlinkSync(configPath);
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '--require', '/foo/bar']
         });
     });
 
-    it('loads a manifest with a relative path', () => {
+    it('loads a manifest with a relative path', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const m = Hoek.clone(manifestFile);
@@ -280,12 +288,12 @@ describe('start()', () => {
             return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', relativePath]
         });
     });
 
-    it('exits the process if the manifest file files to parse', () => {
+    it('exits the process if the manifest file files to parse', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
@@ -309,12 +317,12 @@ describe('start()', () => {
             Fs.unlinkSync(configPath);
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath]
         });
     });
 
-    it('will error if there is an error loading packs from -p', () => {
+    it('will error if there is an error loading packs from -p', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -347,12 +355,12 @@ describe('start()', () => {
             callback(new Error('mock error'));
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath]
         });
     });
 
-    it('parses $prefixed values as environment variable values', () => {
+    it('parses $prefixed values as environment variable values', async () => {
 
         const m = Hoek.clone(manifestFile);
 
@@ -434,12 +442,12 @@ describe('start()', () => {
             return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath]
         });
     });
 
-    it('exits the process if the arguments are invalid', () => {
+    it('exits the process if the arguments are invalid', async () => {
 
         const consoleError = console.error;
         const exit = process.exit;
@@ -457,12 +465,12 @@ describe('start()', () => {
             console.error = consoleError;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: []
         });
     });
 
-    it('prints help with the -h argument', () => {
+    it('prints help with the -h argument', async () => {
 
         const exit = process.exit;
 
@@ -479,12 +487,12 @@ describe('start()', () => {
             console.log = Hoek.ignore;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-h', '-c', 'foo.json']
         });
     });
 
-    it.only('throws an error if there are problems loading the plugins', () => {
+    it('throws an error if there are problems loading the plugins', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -494,72 +502,68 @@ describe('start()', () => {
 
         const compose = Glue.compose;
 
-        Glue.compose = function (manifest, packOptions, callback) {
+        Glue.compose = async function (manifest, packOptions) {
 
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, (err, server) => {
+            const server = await compose(manifest, packOptions);
 
-                expect(err).to.not.exist();
-                expect(server).to.exist();
+            expect(server).to.exist();
 
-                expect(() => {
+            expect(() => {
 
-                    callback(new Error('mock error'), server);
-                }).to.throw(Error, /mock error/);
+                throw new Error('mock error');
+            }).to.throw(Error, /mock error/);
+
+            Glue.compose = compose;
+            Fs.unlinkSync(configPath);
+            return server;
+        };
+
+        await Rejoice.start({
+            args: ['-c', configPath, '-p', modulePath]
+        });
+    });
+
+    it('throws an error if there is a problem starting the server', async () => {
+
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
+        const modulePath = Path.join(__dirname, 'plugins');
+        const m = Hoek.clone(manifestFile);
+
+        Fs.writeFileSync(configPath, JSON.stringify(m));
+
+        const compose = Glue.compose;
+
+        Glue.compose = async function (manifest, packOptions) {
+
+            expect(manifest.server).to.exist();
+            expect(packOptions).to.exist();
+
+            const server = await compose(manifest, packOptions);
+
+            expect(server).to.exist();
+
+            server.start = function (cb) {
 
                 Glue.compose = compose;
                 Fs.unlinkSync(configPath);
-            });
+
+                expect(() => {
+
+                    throw new Error('mock error');
+                }).to.throw(Error, /mock error/);
+            };
+            return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath]
         });
     });
 
-    it('throws an error if there is a problem starting the server', () => {
-
-        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
-        const modulePath = Path.join(__dirname, 'plugins');
-        const m = Hoek.clone(manifestFile);
-
-        Fs.writeFileSync(configPath, JSON.stringify(m));
-
-        const compose = Glue.compose;
-
-        Glue.compose = function (manifest, packOptions, callback) {
-
-            expect(manifest.server).to.exist();
-            expect(packOptions).to.exist();
-
-            compose(manifest, packOptions, (err, server) => {
-
-                expect(err).to.not.exist();
-                expect(server).to.exist();
-
-                server.start = function (cb) {
-
-                    Glue.compose = compose;
-                    Fs.unlinkSync(configPath);
-
-                    expect(() => {
-
-                        cb(new Error('mock error'));
-                    }).to.throw(Error, /mock error/);
-                };
-
-                callback(err, server);
-            });
-        };
-
-        Rejoice.start({
-            args: ['-c', configPath, '-p', modulePath]
-        });
-    });
-
-    it.skip('kills the process on SIGQUIT and restarts on SIGUSR2', () => {
+    it('kills the process on SIGQUIT and restarts on SIGUSR2', async () => {
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -575,52 +579,45 @@ describe('start()', () => {
         process.removeAllListeners('SIGUSR2');
         process.removeAllListeners('SIGQUIT');
 
-        Glue.compose = function (manifest, packOptions, callback) {
+        Glue.compose = async function (manifest, packOptions) {
 
             expect(manifest.server).to.exist();
             expect(packOptions).to.exist();
 
-            compose(manifest, packOptions, (err, server) => {
+            const server = await compose(manifest, packOptions);
 
-                expect(err).to.not.exist();
-                expect(server).to.exist();
+            expect(server).to.exist();
 
-                server.stop = function (cbStop) {
+            server.stop = Hoek.ignore;
 
-                    return cbStop();
+            server.start = function (cbStart) {
+
+                Glue.compose = compose;
+                Fs.unlinkSync(configPath);
+
+                process.exit = function (value) {
+
+                    process.exit = exit;
+                    expect(value).to.equal(0);
                 };
 
-                server.start = function (cbStart) {
+                Rejoice.start = function (options) {
 
-                    Glue.compose = compose;
-                    Fs.unlinkSync(configPath);
+                    Rejoice.start = start;
 
-                    cbStart();
-
-                    process.exit = function (value) {
-
-                        process.exit = exit;
-                        expect(value).to.equal(0);
-                    };
-
-                    Rejoice.start = function (options) {
-
-                        Rejoice.start = start;
-
-                        expect(options).to.equal({
-                            args: ['-c', configPath, '-p', modulePath]
-                        });
-                    };
-
-                    process.emit('SIGQUIT');
-                    process.emit('SIGUSR2');
+                    expect(options).to.equal({
+                        args: ['-c', configPath, '-p', modulePath]
+                    });
                 };
 
-                callback(err, server);
-            });
+                process.emit('SIGQUIT');
+                process.emit('SIGUSR2');
+            };
+
+            return server;
         };
 
-        Rejoice.start({
+        await Rejoice.start({
             args: ['-c', configPath, '-p', modulePath]
         });
     });
