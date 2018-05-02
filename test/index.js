@@ -1,5 +1,6 @@
 'use strict';
 
+const Barrier = require('cb-barrier');
 const ChildProcess = require('child_process');
 const Fs = require('fs');
 const Os = require('os');
@@ -24,8 +25,9 @@ const expect = Code.expect;
 
 describe('bin/rejoice', () => {
 
-    it('composes server with absolute path', () => {
+    it('composes server with absolute path', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -58,16 +60,19 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.equal('loaded\n');
             hapi.kill();
             Fs.unlinkSync(configPath);
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, () => {
+    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -105,43 +110,19 @@ describe('bin/rejoice', () => {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(symlinkPath);
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    /*
-    it('composes server with preConnections callback', () => {
+    it('composes server with preRegister callback', async () => {
 
-        const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preConnections.js'), 'utf8');
-
-        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
-        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-
-        Fs.writeFileSync(configPath, manifest, 'utf8');
-
-        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
-
-        hapi.stdout.on('data', (data) => {
-
-            expect(data.toString()).to.include('preConnections');
-            hapi.kill();
-            Fs.unlinkSync(configPath);
-        });
-
-        hapi.stderr.on('data', (data) => {
-
-            expect(data.toString()).to.not.exist();
-        });
-    });
-
-*/
-
-    it('composes server with preRegister callback', () => {
-
+        const barrier = new Barrier();
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preRegister.js'), 'utf8');
 
         const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
@@ -157,16 +138,19 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.include('preRegister');
             hapi.kill();
             Fs.unlinkSync(configPath);
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('fails when path cannot be resolved', () => {
+    it('fails when path cannot be resolved', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -206,11 +190,15 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
+            barrier.pass();
         });
+
+        await barrier;
     });
 
-    it('errors when it cannot require the extra module', () => {
+    it('errors when it cannot require the extra module', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -252,11 +240,15 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
+            barrier.pass();
         });
+
+        await barrier;
     });
 
-    it('errors when it cannot require the extra module from absolute path', () => {
+    it('errors when it cannot require the extra module from absolute path', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -298,11 +290,14 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
+            barrier.pass();
         });
+        await barrier;
     });
 
-    it('loads extra modules as intended', () => {
+    it('loads extra modules as intended', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -342,15 +337,17 @@ describe('bin/rejoice', () => {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(extraPath);
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+
+        await barrier;
     });
 
-    /*
     it('loads multiple extra modules as intended', () => {
 
         const manifest = {
@@ -360,7 +357,7 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
+                },
                 port: 0,
                 host: 'localhost'
             },
@@ -416,7 +413,7 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.not.exist();
         });
     });
-*/
+
     it('parses $prefixed values as environment variable values', () => {
 
         const manifest = {

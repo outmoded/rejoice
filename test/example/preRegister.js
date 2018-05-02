@@ -12,9 +12,8 @@ module.exports = {
             }
         ]
     },
-    preRegister: function (server, next) {
+    preRegister: function (server) {
 
         console.log('Inside `preRegister` function.');
-        next();
     }
 };

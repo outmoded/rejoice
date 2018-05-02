@@ -19,6 +19,7 @@
     "hoek": "5.x.x"
   },
   "devDependencies": {
+    "cb-barrier": "1.x.x",
     "catbox-memory": "3.x.x",
     "code": "5.x.x",
     "hapi": "17.x.x",
