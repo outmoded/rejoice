@@ -348,8 +348,9 @@ describe('bin/rejoice', () => {
         await barrier;
     });
 
-    it('loads multiple extra modules as intended', () => {
+    it('loads multiple extra modules as intended', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -405,6 +406,7 @@ describe('bin/rejoice', () => {
                 for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
                     Fs.unlinkSync(extraPaths[i]);
                 }
+                barrier.pass();
             }
         });
 
@@ -412,10 +414,12 @@ describe('bin/rejoice', () => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('parses $prefixed values as environment variable values', () => {
+    it('parses $prefixed values as environment variable values', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -481,6 +485,7 @@ describe('bin/rejoice', () => {
                 restore();
                 restore = changes.pop();
             }
+            barrier.pass();
         });
 
         hapi.stderr.setEncoding('utf8');
@@ -488,5 +493,6 @@ describe('bin/rejoice', () => {
 
             expect(data).to.not.exist();
         });
+        await barrier;
     });
 });
