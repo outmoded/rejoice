@@ -1,3 +1,7 @@
 #!/usr/bin/env node
 
-require('..').start({ args: process.argv});
+async function main () {
+    await require('..').start({ args: process.argv});
+}
+
+main();

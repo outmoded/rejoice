@@ -22,122 +22,46 @@ where app.json may look something like:
 
 ```javascript
 {
-    "connections": [
-        {
-            "port": 8080,
-            "routes": {
-                "timeout": {
-                    "server": 10000
+    server: {
+        cache: 'redis',
+        port: 8000
+    },
+    register: {
+        plugins: [
+            './awesome-plugin.js',
+            {
+                plugin: require('myplugin'),
+                options: {
+                    uglify: true
                 }
             },
-            "load": {
-                "maxHeapUsedBytes": 1073741824,
-                "maxRssBytes": 2147483648,
-                "maxEventLoopDelay": 5000
+            {
+                plugin: './ui-user'
             },
-            "labels": [
-                "api",
-                "http"
-            ]
-        },
-        {
-            "port": 8999,
-            "labels": [
-                "admin"
-            ]
-        }
-    ],
-    "server": {
-        "load": {
-            "sampleInterval": 1000
-        }
-    },
-    "registrations": [
-        {
-            "plugin": {
-                "register": "good",
-                "options": {
-                    "ops": {
-                      "interval": 5000
-                    },
-                    "reporters": {
-                        "myConsoleReporter": [{
-                            "module": "good-squeeze",
-                            "name": "Squeeze",
-                            "args": [{ "log": "*", "response": "*" }]
-                        }, {
-                            "module": "good-console"
-                        }, "stdout"],
-                        "myFileReporter": [{
-                            "module": "good-squeeze",
-                            "name": "Squeeze",
-                            "args": [{ "ops": "*" }]
-                        }, {
-                            "module": "good-squeeze",
-                            "name": "SafeJson"
-                        }, {
-                            "module": "good-file",
-                            "args": ["./test/fixtures/awesome_log"]
-                        }]
-                    }
+            {
+                plugin: './ui-admin',
+                options: {
+                    sessiontime: 500
+                },
+                routes: {
+                    prefix: '/admin'
                 }
             }
-        },
-        {
-            "plugin": "lout"
+        ],
+        options: {
+            once: false
         }
-    ]
+    }
 }
 ```
+
+For more information about manifests, see [Glue's API](https://github.com/hapijs/glue/blob/master/API.md).
 
 You can specify a specific path to be passed to Glue as the `relativeTo` option by using the `-p` flag.
 
 ```javascript
 rejoice -c app.json -p /full/path/to/project/plugin/dir
 ```
-
-This will allow your plugins to use relative paths in the config file.  See the example below.
-
-```javascript
-{
-    "connections": [
-        {
-            "port": 8080,
-            "labels": [
-                "api",
-                "http"
-            ]
-        }
-    ],
-    "registrations": [
-        {
-            "plugin": "lout"
-        },
-        {
-            "plugin": "./myplugin"
-        }
-    ]
-}
-```
-
-When using regular JS file, you may add `preConnections` or `preRegister` callbacks. See the example below.
-
-```javascript
-module.exports = {
-  connections: [ '...' ],
-  registrations: [ '...' ],
-  preConnections: function(server, next) {
-    // your preConnections logic goes here
-    next();
-  },
-  preRegister: function(server, next) {
-    // your preRegister logic goes here
-    next();
-  }
-};
-```
-
-For more information about these options, see [Glue's API](https://github.com/hapijs/glue/blob/master/API.md).
 
 If you need a module required before your application is loaded you can use the `-r` flag.
 

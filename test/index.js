@@ -1,5 +1,6 @@
 'use strict';
 
+const Barrier = require('cb-barrier');
 const ChildProcess = require('child_process');
 const Fs = require('fs');
 const Os = require('os');
@@ -24,8 +25,9 @@ const expect = Code.expect;
 
 describe('bin/rejoice', () => {
 
-    it('composes server with absolute path', (done) => {
+    it('composes server with absolute path', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -33,28 +35,20 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
-
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                host: 'localhost',
+                port: 0
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -66,18 +60,19 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.equal('loaded\n');
             hapi.kill();
             Fs.unlinkSync(configPath);
-
-            done();
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, (done) => {
+    it('composes server with absolute path using symlink', { skip: process.platform === 'win32' }, async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -85,30 +80,23 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                host: 'localhost',
+                port: 0
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
-        const symlinkPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const symlinkPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
 
         Fs.symlinkSync(modulePath, symlinkPath, 'dir');
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
@@ -122,47 +110,22 @@ describe('bin/rejoice', () => {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(symlinkPath);
-
-            done();
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('composes server with preConnections callback', (done) => {
+    it('composes server with preRegister callback', async () => {
 
-        const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preConnections.js'), 'utf8');
-
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
-        const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
-
-        Fs.writeFileSync(configPath, manifest, 'utf8');
-
-        const hapi = ChildProcess.spawn('node', [rejoice, '-c', configPath]);
-
-        hapi.stdout.on('data', (data) => {
-
-            expect(data.toString()).to.include('preConnections');
-            hapi.kill();
-            Fs.unlinkSync(configPath);
-
-            done();
-        });
-
-        hapi.stderr.on('data', (data) => {
-
-            expect(data.toString()).to.not.exist();
-        });
-    });
-
-    it('composes server with preRegister callback', (done) => {
-
+        const barrier = new Barrier();
         const manifest = Fs.readFileSync(Path.join(__dirname, 'example', 'preRegister.js'), 'utf8');
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -175,18 +138,19 @@ describe('bin/rejoice', () => {
             expect(data.toString()).to.include('preRegister');
             hapi.kill();
             Fs.unlinkSync(configPath);
-
-            done();
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('fails when path cannot be resolved', (done) => {
+    it('fails when path cannot be resolved', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -194,27 +158,20 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
 
         Fs.writeFileSync(configPath, JSON.stringify(manifest));
@@ -233,13 +190,15 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
-
-            done();
+            barrier.pass();
         });
+
+        await barrier;
     });
 
-    it('errors when it cannot require the extra module', (done) => {
+    it('errors when it cannot require the extra module', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -247,27 +206,20 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const extraPath = 'somecoolmodule';
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
@@ -288,13 +240,15 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
-
-            done();
+            barrier.pass();
         });
+
+        await barrier;
     });
 
-    it('errors when it cannot require the extra module from absolute path', (done) => {
+    it('errors when it cannot require the extra module from absolute path', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -302,28 +256,21 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                host: 'localhost',
+                port: 0
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
+        const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -343,13 +290,14 @@ describe('bin/rejoice', () => {
             hapi.kill();
 
             Fs.unlinkSync(configPath);
-
-            done();
+            barrier.pass();
         });
+        await barrier;
     });
 
-    it('loads extra modules as intended', (done) => {
+    it('loads extra modules as intended', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -357,30 +305,23 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
         const extra = 'console.log(\'test passed\')';
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
-        const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
+        const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -396,18 +337,20 @@ describe('bin/rejoice', () => {
 
             Fs.unlinkSync(configPath);
             Fs.unlinkSync(extraPath);
-
-            done();
+            barrier.pass();
         });
 
         hapi.stderr.on('data', (data) => {
 
             expect(data.toString()).to.not.exist();
         });
+
+        await barrier;
     });
 
-    it('loads multiple extra modules as intended', (done) => {
+    it('loads multiple extra modules as intended', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -415,27 +358,20 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: 'special-value'
-                }
-            },
-            connections: [
-                {
-                    port: 0,
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: 'localhost',
-                    port: 0,
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: './--loaded'
-                }
-            ]
+                port: 0,
+                host: 'localhost'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--loaded'
+                    }
+                ]
+            }
         };
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -446,7 +382,7 @@ describe('bin/rejoice', () => {
         const EXTRAS_TO_CREATE = 2;
         const extraPaths = [];
         for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
-            const extraPath = Hoek.uniqueFilename(Os.tmpDir(), 'js');
+            const extraPath = Hoek.uniqueFilename(Os.tmpdir(), 'js');
 
             Fs.writeFileSync(extraPath, 'console.log(\'test ' + i + ' passed\')');
 
@@ -470,8 +406,7 @@ describe('bin/rejoice', () => {
                 for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
                     Fs.unlinkSync(extraPaths[i]);
                 }
-
-                done();
+                barrier.pass();
             }
         });
 
@@ -479,10 +414,12 @@ describe('bin/rejoice', () => {
 
             expect(data.toString()).to.not.exist();
         });
+        await barrier;
     });
 
-    it('parses $prefixed values as environment variable values', { parallel: false }, (done) => {
+    it('parses $prefixed values as environment variable values', async () => {
 
+        const barrier = new Barrier();
         const manifest = {
             server: {
                 cache: {
@@ -490,29 +427,20 @@ describe('bin/rejoice', () => {
                 },
                 app: {
                     my: '$env.special_value'
-                }
-            },
-            connections: [
-                {
-                    port: '$env.undefined',
-                    labels: ['api', 'nasty', 'test']
                 },
-                {
-                    host: '$env.host',
-                    port: '$env.port',
-                    labels: ['api', 'nice']
-                }
-            ],
-            registrations: [
-                {
-                    plugin: {
-                        register: './--options',
+                host: '$env.host',
+                port: '$env.port'
+            },
+            register: {
+                plugins: [
+                    {
+                        plugin: './--options',
                         options: {
                             key: '$env.plugin_option'
                         }
                     }
-                }
-            ]
+                ]
+            }
         };
 
         const changes = [];
@@ -537,7 +465,7 @@ describe('bin/rejoice', () => {
         // Ensure that the 'undefined' environment variable is *not* set.
         changes.push(setEnv('undefined'));
 
-        const configPath = Hoek.uniqueFilename(Os.tmpDir(), 'json');
+        const configPath = Hoek.uniqueFilename(Os.tmpdir(), 'json');
         const rejoice = Path.join(__dirname, '..', 'bin', 'rejoice');
         const modulePath = Path.join(__dirname, 'plugins');
 
@@ -557,8 +485,7 @@ describe('bin/rejoice', () => {
                 restore();
                 restore = changes.pop();
             }
-
-            done();
+            barrier.pass();
         });
 
         hapi.stderr.setEncoding('utf8');
@@ -566,5 +493,6 @@ describe('bin/rejoice', () => {
 
             expect(data).to.not.exist();
         });
+        await barrier;
     });
 });
