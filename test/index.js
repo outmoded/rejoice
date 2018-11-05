@@ -406,6 +406,7 @@ describe('bin/rejoice', () => {
                 for (let i = 0; i < EXTRAS_TO_CREATE; ++i) {
                     Fs.unlinkSync(extraPaths[i]);
                 }
+
                 barrier.pass();
             }
         });
@@ -485,6 +486,7 @@ describe('bin/rejoice', () => {
                 restore();
                 restore = changes.pop();
             }
+
             barrier.pass();
         });
 

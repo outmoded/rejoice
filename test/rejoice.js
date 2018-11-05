@@ -89,6 +89,7 @@ describe('start()', () => {
                 Glue.compose = compose;
                 Fs.unlinkSync(configPath);
             };
+
             return server;
         };
 
@@ -127,6 +128,7 @@ describe('start()', () => {
                 Fs.unlinkSync(extraPath);
                 Fs.unlinkSync(configPath);
             };
+
             return server;
         };
 
@@ -173,6 +175,7 @@ describe('start()', () => {
                 console.error = consoleError;
                 Fs.unlinkSync(configPath);
             };
+
             return server;
         };
 
@@ -220,6 +223,7 @@ describe('start()', () => {
                 console.error = consoleError;
                 Fs.unlinkSync(configPath);
             };
+
             return server;
         };
 
@@ -285,6 +289,7 @@ describe('start()', () => {
                 Glue.compose = compose;
                 Fs.unlinkSync(configPath);
             };
+
             return server;
         };
 
@@ -439,6 +444,7 @@ describe('start()', () => {
                     restore = changes.pop();
                 }
             };
+
             return server;
         };
 
@@ -555,6 +561,7 @@ describe('start()', () => {
                     throw new Error('mock error');
                 }).to.throw(Error, /mock error/);
             };
+
             return server;
         };
 
