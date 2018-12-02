@@ -23,7 +23,7 @@
     "catbox-memory": "4.x.x",
     "code": "5.x.x",
     "hapi": "17.x.x",
-    "lab": "17.x.x"
+    "lab": "18.x.x"
   },
   "bin": {
     "rejoice": "./bin/rejoice"
