@@ -48,9 +48,7 @@ describe('start()', () => {
 
     const manifestFile = {
         server: {
-            cache: {
-                engine: 'catbox-memory'
-            },
+            cache: 'catbox-memory',
             app: {
                 my: 'special-value'
             },
