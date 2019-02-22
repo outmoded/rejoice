@@ -30,9 +30,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -75,9 +73,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -153,9 +149,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -201,9 +195,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -251,9 +243,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -300,9 +290,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -353,9 +341,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: 'special-value'
                 },
@@ -423,9 +409,7 @@ describe('bin/rejoice', () => {
         const barrier = new Barrier();
         const manifest = {
             server: {
-                cache: {
-                    engine: 'catbox-memory'
-                },
+                cache: 'catbox-memory',
                 app: {
                     my: '$env.special_value'
                 },
